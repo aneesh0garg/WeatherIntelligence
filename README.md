@@ -31,7 +31,6 @@ Use **Save to favorites** on the current-weather card to persist a city. Saved c
 
 1. Install a **debug** build and accept the notification permission prompt.
 2. Load any city, then tap **Send test severe-weather alert**. This button is compiled only into debug builds.
-3. For a real background path, leave at least one city cached, force-run the `weather_periodic_sync` job with Android Studio's Background Task Inspector, and use a city currently covered by a WeatherAPI severe/extreme alert.
 
 If a notification does not appear, confirm that the app's **Severe weather alerts** channel is enabled in Android system notification settings.
 

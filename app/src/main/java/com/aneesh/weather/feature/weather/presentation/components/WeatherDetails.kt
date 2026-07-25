@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.presentation.home
+package com.aneesh.weather.feature.weather.presentation.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,22 +11,19 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aneesh.weather.core.util.formatPressure
 import com.aneesh.weather.core.util.formatWindSpeed
 import com.aneesh.weather.core.util.toDisplayTime
 import com.aneesh.weather.feature.weather.domain.model.Weather
+import com.aneesh.weather.feature.weather.presentation.theme.LocalWeatherPalette
 
 @Composable
-fun WeatherDetailsCard(
-    weather: Weather,
-    containerColor: Color = MaterialTheme.colorScheme.surface,
-    contentColor: Color = MaterialTheme.colorScheme.onSurface
-) {
+fun WeatherDetailsCard(weather: Weather) {
+    val palette = LocalWeatherPalette.current
     ElevatedCard(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-        colors = CardDefaults.elevatedCardColors(containerColor = containerColor, contentColor = contentColor)
+        colors = CardDefaults.elevatedCardColors(containerColor = palette.cardContainer, contentColor = palette.content)
     ) {
         Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text("Weather details", style = MaterialTheme.typography.titleLarge)

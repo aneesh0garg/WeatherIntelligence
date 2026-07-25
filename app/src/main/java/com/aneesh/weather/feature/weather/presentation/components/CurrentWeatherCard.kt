@@ -15,27 +15,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.aneesh.weather.core.util.formatTemperature
 import com.aneesh.weather.feature.weather.domain.model.Weather
+import com.aneesh.weather.feature.weather.presentation.theme.LocalWeatherPalette
 
 @Composable
 fun CurrentWeatherCard(
     weather: Weather,
     isFavorite: Boolean,
-    onToggleFavorite: () -> Unit,
-    containerColor: Color = MaterialTheme.colorScheme.surface,
-    contentColor: Color = MaterialTheme.colorScheme.onSurface
+    onToggleFavorite: () -> Unit
 ) {
+    val palette = LocalWeatherPalette.current
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         colors = CardDefaults.elevatedCardColors(
-            containerColor = containerColor,
-            contentColor = contentColor
+            containerColor = palette.cardContainer,
+            contentColor = palette.content
         )
     ) {
         Column(
@@ -81,8 +80,8 @@ fun CurrentWeatherCard(
             OutlinedButton(
                 onClick = onToggleFavorite,
                 modifier = Modifier.padding(top = 12.dp),
-                border = BorderStroke(1.dp, contentColor),
-                colors = androidx.compose.material3.ButtonDefaults.outlinedButtonColors(contentColor = contentColor)
+                border = BorderStroke(1.dp, palette.content),
+                colors = androidx.compose.material3.ButtonDefaults.outlinedButtonColors(contentColor = palette.content)
             ) {
                 Text(if (isFavorite) "Remove from favorites" else "Save to favorites")
             }

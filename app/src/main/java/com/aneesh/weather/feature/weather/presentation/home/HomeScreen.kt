@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Button
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -26,16 +27,25 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aneesh.weather.feature.weather.domain.model.Weather
 import com.aneesh.weather.feature.weather.presentation.components.WeatherSearchBar
 import com.aneesh.weather.BuildConfig
+import com.aneesh.weather.R
+import com.aneesh.weather.feature.weather.presentation.components.DailyForecastSection
+import com.aneesh.weather.feature.weather.presentation.components.HourlyForecastSection
+import com.aneesh.weather.feature.weather.presentation.components.WeatherDetailsCard
+import com.aneesh.weather.feature.weather.presentation.components.WeatherHero
+import com.aneesh.weather.feature.weather.presentation.theme.LocalWeatherPalette
+import com.aneesh.weather.feature.weather.presentation.theme.toWeatherPalette
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,26 +92,29 @@ fun HomeScreen(
             }
 
             is HomeUiState.Success -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Brush.verticalGradient(state.weather.condition.weatherColors()))
-                ) {
-                    PullToRefreshBox(
-                        isRefreshing = false,
-                        onRefresh = {
-                            viewModel.onEvent(HomeEvent.Refresh)
-                        }
+                val palette = state.weather.condition.toWeatherPalette()
+                CompositionLocalProvider(LocalWeatherPalette provides palette) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Brush.verticalGradient(palette.background))
                     ) {
-                        WeatherContent(
-                            weather = state.weather,
-                            isOffline = state.isOffline,
-                            onSearch = { viewModel.onEvent(HomeEvent.SearchCity(it)) },
-                            onTestAlert = { viewModel.onEvent(HomeEvent.SendTestAlert) },
-                            favoriteCities = favoriteCities,
-                            onFavoriteSelected = { viewModel.onEvent(HomeEvent.SearchCity(it)) },
-                            onToggleFavorite = { viewModel.onEvent(HomeEvent.ToggleFavorite) }
-                        )
+                        PullToRefreshBox(
+                            isRefreshing = false,
+                            onRefresh = {
+                                viewModel.onEvent(HomeEvent.Refresh)
+                            }
+                        ) {
+                            WeatherContent(
+                                weather = state.weather,
+                                isOffline = state.isOffline,
+                                onSearch = { viewModel.onEvent(HomeEvent.SearchCity(it)) },
+                                onTestAlert = { viewModel.onEvent(HomeEvent.SendTestAlert) },
+                                favoriteCities = favoriteCities,
+                                onFavoriteSelected = { viewModel.onEvent(HomeEvent.SearchCity(it)) },
+                                onToggleFavorite = { viewModel.onEvent(HomeEvent.ToggleFavorite) }
+                            )
+                        }
                     }
                 }
             }
@@ -133,7 +146,7 @@ private fun WeatherContent(
     onFavoriteSelected: (String) -> Unit,
     onToggleFavorite: () -> Unit
 ) {
-    val weatherColors = weather.condition.weatherColors()
+    val palette = LocalWeatherPalette.current
     LazyColumn {
         item {
             WeatherSearchBar(initialValue = weather.city, onSearch = onSearch)
@@ -158,16 +171,11 @@ private fun WeatherContent(
             WeatherHero(
                 weather = weather,
                 isFavorite = favoriteCities.any { it.equals(weather.city, ignoreCase = true) },
-                onToggleFavorite = onToggleFavorite,
-                containerColor = weatherColors.last()
+                onToggleFavorite = onToggleFavorite
             )
         }
         item {
-            WeatherDetailsCard(
-                weather = weather,
-                containerColor = weatherColors.last(),
-                contentColor = androidx.compose.ui.graphics.Color.White
-            )
+            WeatherDetailsCard(weather)
         }
         if (BuildConfig.DEBUG) {
             item {
@@ -176,43 +184,45 @@ private fun WeatherContent(
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = weatherColors.last(),
-                        contentColor = androidx.compose.ui.graphics.Color.White
+                        containerColor = palette.cardContainer,
+                        contentColor = palette.content
                     )
-                ) { Text("Send test severe-weather alert") }
+                ) { Text(stringResource(R.string.send_test_severe_weather_alert)) }
             }
         }
         item {
-            HourlyForecastSection(
-                weather = weather.hourly,
-                containerColor = weatherColors.last(),
-                contentColor = androidx.compose.ui.graphics.Color.White
-            )
+            HourlyForecastSection(weather.hourly)
         }
         item {
-            DailyForecastSection(
-                weather = weather.daily,
-                containerColor = weatherColors.last(),
-                contentColor = androidx.compose.ui.graphics.Color.White
-            )
+            DailyForecastSection(weather.daily)
         }
     }
 }
 
 @Composable
 private fun FavoriteCitiesSection(cities: List<String>, onCitySelected: (String) -> Unit) {
+    val palette = LocalWeatherPalette.current
     Column(modifier = Modifier.padding(top = 16.dp)) {
         Text(
-            text = "Favorites",
+            text = stringResource(R.string.favorites),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp),
+            color = palette.content
         )
         LazyRow(modifier = Modifier.padding(top = 8.dp)) {
             items(cities, key = { it }) { city ->
                 AssistChip(
                     onClick = { onCitySelected(city) },
                     label = { Text(city) },
-                    modifier = Modifier.padding(start = 16.dp)
+                    modifier = Modifier.padding(start = 16.dp),
+                    colors = AssistChipDefaults.assistChipColors(
+                        containerColor = palette.cardContainer,
+                        labelColor = palette.content
+                    ),
+                    border = AssistChipDefaults.assistChipBorder(
+                        enabled = true,
+                        borderColor = palette.mutedContent
+                    )
                 )
             }
         }

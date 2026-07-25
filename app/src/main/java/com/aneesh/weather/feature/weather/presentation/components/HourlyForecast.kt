@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.presentation.home
+package com.aneesh.weather.feature.weather.presentation.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
@@ -28,24 +29,22 @@ import com.aneesh.weather.R
 import com.aneesh.weather.core.util.formatTemperature
 import com.aneesh.weather.core.util.toDisplayTime
 import com.aneesh.weather.feature.weather.domain.model.HourlyWeather
+import com.aneesh.weather.feature.weather.presentation.theme.LocalWeatherPalette
 import coil.compose.AsyncImage
 
 @Composable
-fun HourlyForecastSection(
-    weather: List<HourlyWeather>,
-    containerColor: Color = MaterialTheme.colorScheme.surface,
-    contentColor: Color = MaterialTheme.colorScheme.onSurface
-) {
+fun HourlyForecastSection(weather: List<HourlyWeather>) {
+    val palette = LocalWeatherPalette.current
     Column(modifier = Modifier.padding(top = 24.dp)) {
         Text(
             "Hourly forecast",
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(horizontal = 16.dp),
-            color = contentColor
+            color = palette.content
         )
-        TemperatureChart(weather, lineColor = contentColor, gridColor = contentColor.copy(alpha = 0.35f))
+        TemperatureChart(weather, lineColor = palette.chartLine, gridColor = palette.chartGrid)
         LazyRow(contentPadding = PaddingValues(16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(weather, key = { it.time }) { HourItem(it, containerColor, contentColor) }
+            items(weather, key = { it.time }) { HourItem(it) }
         }
     }
 }
@@ -70,13 +69,13 @@ private fun TemperatureChart(hours: List<HourlyWeather>, lineColor: Color, gridC
 
         repeat(3) { index ->
             val y = top + (bottom - top) * index / 2f
-            drawLine(gridColor, start = androidx.compose.ui.geometry.Offset(left, y), end = androidx.compose.ui.geometry.Offset(right, y), strokeWidth = 1.dp.toPx())
+            drawLine(gridColor, start = Offset(left, y), end = Offset(right, y), strokeWidth = 1.dp.toPx())
         }
 
         val points = temperatures.mapIndexed { index, temperature ->
             val x = left + (right - left) * index / (temperatures.lastIndex).toFloat()
             val y = bottom - ((temperature - min) / range) * (bottom - top)
-            androidx.compose.ui.geometry.Offset(x, y)
+            Offset(x, y)
         }
         points.zipWithNext().forEach { (start, end) ->
             drawLine(lineColor, start, end, strokeWidth = 3.dp.toPx(), cap = StrokeCap.Round)
@@ -89,10 +88,11 @@ private fun TemperatureChart(hours: List<HourlyWeather>, lineColor: Color, gridC
 }
 
 @Composable
-private fun HourItem(hour: HourlyWeather, containerColor: Color, contentColor: Color) {
+private fun HourItem(hour: HourlyWeather) {
+    val palette = LocalWeatherPalette.current
     ElevatedCard(
         modifier = Modifier.width(100.dp),
-        colors = CardDefaults.elevatedCardColors(containerColor = containerColor, contentColor = contentColor)
+        colors = CardDefaults.elevatedCardColors(containerColor = palette.cardContainer, contentColor = palette.content)
     ) {
         Column(
             modifier = Modifier.padding(vertical = 16.dp, horizontal = 12.dp).fillMaxWidth(),
@@ -116,12 +116,13 @@ private fun HourItem(hour: HourlyWeather, containerColor: Color, contentColor: C
 
 @Composable
 private fun RainChance(chance: Int) {
+    val palette = LocalWeatherPalette.current
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
         Icon(
             painter = painterResource(R.drawable.ic_rain_chance),
             contentDescription = "Chance of rain",
             modifier = Modifier.size(14.dp),
-            tint = Color(0xFF59C8FF)
+            tint = palette.rain
         )
         Text("$chance%", style = MaterialTheme.typography.labelSmall)
     }

@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.presentation.home
+package com.aneesh.weather.feature.weather.presentation.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,32 +14,30 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.painterResource
 import com.aneesh.weather.R
 import com.aneesh.weather.core.util.formatTemperature
 import com.aneesh.weather.core.util.toForecastDayLabel
 import com.aneesh.weather.feature.weather.domain.model.DailyWeather
+import com.aneesh.weather.feature.weather.presentation.theme.LocalWeatherPalette
 import coil.compose.AsyncImage
 
 @Composable
-fun DailyForecastSection(
-    weather: List<DailyWeather>,
-    containerColor: Color = MaterialTheme.colorScheme.surface,
-    contentColor: Color = MaterialTheme.colorScheme.onSurface
-) {
+fun DailyForecastSection(weather: List<DailyWeather>) {
+    val palette = LocalWeatherPalette.current
     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("7-day forecast", style = MaterialTheme.typography.titleLarge, color = contentColor)
-        weather.forEach { DailyItem(it, containerColor, contentColor) }
+        Text("7-day forecast", style = MaterialTheme.typography.titleLarge, color = palette.content)
+        weather.forEach { DailyItem(it) }
     }
 }
 
 @Composable
-private fun DailyItem(day: DailyWeather, containerColor: Color, contentColor: Color) {
+private fun DailyItem(day: DailyWeather) {
+    val palette = LocalWeatherPalette.current
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.elevatedCardColors(containerColor = containerColor, contentColor = contentColor)
+        colors = CardDefaults.elevatedCardColors(containerColor = palette.cardContainer, contentColor = palette.content)
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
@@ -61,7 +59,7 @@ private fun DailyItem(day: DailyWeather, containerColor: Color, contentColor: Co
                             painter = painterResource(R.drawable.ic_rain_chance),
                             contentDescription = "Chance of rain",
                             modifier = Modifier.size(14.dp),
-                            tint = Color(0xFF59C8FF)
+                            tint = palette.rain
                         )
                         Text("${day.chanceOfRain}%", style = MaterialTheme.typography.labelSmall)
                     }

@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aneesh.weather.feature.weather.presentation.theme.LocalWeatherPalette
 
 @Composable
 fun WeatherSearchBar(
@@ -25,6 +26,7 @@ fun WeatherSearchBar(
     initialValue: String,
     onSearch: (String) -> Unit
 ) {
+    val palette = LocalWeatherPalette.current
 
     var city by remember(initialValue) {
         mutableStateOf(initialValue)
@@ -46,7 +48,8 @@ fun WeatherSearchBar(
         leadingIcon = {
             Icon(
                 Icons.Default.Search,
-                null
+                null,
+                tint = palette.content
             )
         },
         trailingIcon = {
@@ -59,7 +62,8 @@ fun WeatherSearchBar(
             ) {
                 Icon(
                     Icons.Default.Search,
-                    "Search"
+                    "Search",
+                    tint = palette.content
                 )
             }
         },
@@ -75,7 +79,21 @@ fun WeatherSearchBar(
                 }
             }
         ),
-        colors = TextFieldDefaults.colors()
+        colors = TextFieldDefaults.colors(
+            focusedTextColor = palette.content,
+            unfocusedTextColor = palette.content,
+            focusedContainerColor = palette.cardContainer,
+            unfocusedContainerColor = palette.cardContainer,
+            focusedLabelColor = palette.content,
+            unfocusedLabelColor = palette.mutedContent,
+            focusedLeadingIconColor = palette.content,
+            unfocusedLeadingIconColor = palette.mutedContent,
+            focusedTrailingIconColor = palette.content,
+            unfocusedTrailingIconColor = palette.mutedContent,
+            focusedIndicatorColor = palette.content,
+            unfocusedIndicatorColor = palette.mutedContent,
+            cursorColor = palette.content
+        )
     )
 }
 

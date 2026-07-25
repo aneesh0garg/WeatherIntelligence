@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Weather Intelligence</string>
+    <string name="send_test_severe_weather_alert">Send test severe-weather alert</string>
+    <string name="favorites">Favorites</string>
 </resources>
