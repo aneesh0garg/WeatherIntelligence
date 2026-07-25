@@ -11,4 +11,8 @@ sealed interface HomeEvent {
     data object SendTestAlert : HomeEvent
 
     data object ToggleFavorite : HomeEvent
+
+    data object LoadCurrentCity : HomeEvent
+
+    data object UseFallbackCity : HomeEvent
 }

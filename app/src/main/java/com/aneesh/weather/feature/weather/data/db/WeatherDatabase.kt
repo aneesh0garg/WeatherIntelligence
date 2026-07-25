@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.aneesh.weather.feature.weather.data.db.converter.WeatherTypeConverters
 @Database(
     entities = [WeatherEntity::class, FavoriteCityEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(
@@ -23,6 +23,14 @@ abstract class WeatherDatabase : RoomDatabase() {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL(
                     "CREATE TABLE IF NOT EXISTS `favorite_cities` (`city` TEXT NOT NULL, `addedAt` INTEGER NOT NULL, PRIMARY KEY(`city`))"
+                )
+            }
+        }
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "ALTER TABLE `favorite_cities` ADD COLUMN `lastSelectedAt` INTEGER NOT NULL DEFAULT 0"
                 )
             }
         }

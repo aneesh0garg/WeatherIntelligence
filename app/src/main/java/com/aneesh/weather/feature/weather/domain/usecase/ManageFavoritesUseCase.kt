@@ -8,6 +8,12 @@ class ManageFavoritesUseCase @Inject constructor(
 ) {
     fun observe() = repository.observeFavoriteCities()
 
+    suspend fun lastAdded() = repository.getLastAddedFavorite()
+
+    suspend fun lastSelected() = repository.getLastSelectedFavorite()
+
+    suspend fun markSelected(city: String) = repository.markFavoriteSelected(city)
+
     suspend fun add(city: String) = repository.addFavorite(city)
 
     suspend fun remove(city: String) = repository.removeFavorite(city)

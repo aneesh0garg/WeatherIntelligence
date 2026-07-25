@@ -1,6 +1,11 @@
 package com.aneesh.weather.feature.weather.presentation.home
 
 import android.widget.Toast
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,12 +44,28 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val favoriteCities by viewModel.favoriteCities.collectAsStateWithLifecycle()
+    val needsInitialLocation by viewModel.needsInitialLocation.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        viewModel.onEvent(if (granted) HomeEvent.LoadCurrentCity else HomeEvent.UseFallbackCity)
+    }
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
                 is HomeEffect.ShowToast -> Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    LaunchedEffect(needsInitialLocation) {
+        if (needsInitialLocation) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                viewModel.onEvent(HomeEvent.LoadCurrentCity)
+            } else {
+                locationPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
             }
         }
     }

@@ -33,6 +33,16 @@ class WeatherRepositoryImpl @Inject constructor(
     override fun observeFavoriteCities(): Flow<List<String>> =
         favoriteCityDao.observeAll().map { favorites -> favorites.map { it.city } }
 
+    override suspend fun getLastAddedFavorite(): String? =
+        favoriteCityDao.getCities().firstOrNull()
+
+    override suspend fun getLastSelectedFavorite(): String? =
+        favoriteCityDao.getLastSelectedCity()
+
+    override suspend fun markFavoriteSelected(city: String) {
+        favoriteCityDao.markSelected(city, System.currentTimeMillis())
+    }
+
     override suspend fun addFavorite(city: String) {
         favoriteCityDao.insert(FavoriteCityEntity(city = city.trim()))
     }

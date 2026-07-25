@@ -11,6 +11,12 @@ interface WeatherRepository {
 
     fun observeFavoriteCities(): Flow<List<String>>
 
+    suspend fun getLastAddedFavorite(): String?
+
+    suspend fun getLastSelectedFavorite(): String?
+
+    suspend fun markFavoriteSelected(city: String)
+
     suspend fun addFavorite(city: String)
 
     suspend fun removeFavorite(city: String)

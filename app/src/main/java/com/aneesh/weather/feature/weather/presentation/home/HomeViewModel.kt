@@ -8,6 +8,7 @@ import com.aneesh.weather.feature.weather.domain.usecase.GetWeatherUseCase
 import com.aneesh.weather.feature.weather.domain.usecase.ManageFavoritesUseCase
 import com.aneesh.weather.feature.weather.domain.model.SevereWeatherAlert
 import com.aneesh.weather.feature.weather.worker.WeatherAlertNotifier
+import com.aneesh.weather.feature.weather.location.CurrentCityProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -21,7 +22,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getWeatherUseCase: GetWeatherUseCase,
     private val manageFavoritesUseCase: ManageFavoritesUseCase,
-    private val weatherAlertNotifier: WeatherAlertNotifier
+    private val weatherAlertNotifier: WeatherAlertNotifier,
+    private val currentCityProvider: CurrentCityProvider
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
@@ -30,13 +32,15 @@ class HomeViewModel @Inject constructor(
     val favoriteCities = _favoriteCities.asStateFlow()
     private val _effects = MutableSharedFlow<HomeEffect>()
     val effects = _effects.asSharedFlow()
+    private val _needsInitialLocation = MutableStateFlow(false)
+    val needsInitialLocation = _needsInitialLocation.asStateFlow()
     private var weatherJob: Job? = null
 
     init {
         viewModelScope.launch {
             manageFavoritesUseCase.observe().collect { _favoriteCities.value = it }
         }
-        onEvent(HomeEvent.SearchCity("London"))
+        _needsInitialLocation.value = true
     }
 
     private fun loadWeather(city: String, forceRefresh: Boolean = false) {
@@ -77,6 +81,11 @@ class HomeViewModel @Inject constructor(
     fun onEvent(event: HomeEvent) {
         when (event) {
             is HomeEvent.SearchCity -> {
+                viewModelScope.launch {
+                    if (_favoriteCities.value.any { it.equals(event.city, ignoreCase = true) }) {
+                        manageFavoritesUseCase.markSelected(event.city)
+                    }
+                }
                 loadWeather(event.city)
             }
 
@@ -109,6 +118,37 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             }
+
+            HomeEvent.LoadCurrentCity -> {
+                _needsInitialLocation.value = false
+                viewModelScope.launch {
+                    val city = currentCityProvider.getCity()
+                    if (city != null) {
+                        loadWeather(city)
+                    } else {
+                        loadRecentFavoriteOrDefault()
+                    }
+                }
+            }
+
+            HomeEvent.UseFallbackCity -> {
+                _needsInitialLocation.value = false
+                loadRecentFavoriteOrDefault()
+            }
         }
+    }
+
+    private fun loadRecentFavoriteOrDefault() {
+        viewModelScope.launch {
+            loadWeather(
+                manageFavoritesUseCase.lastSelected()
+                    ?: manageFavoritesUseCase.lastAdded()
+                    ?: DEFAULT_CITY
+            )
+        }
+    }
+
+    private companion object {
+        const val DEFAULT_CITY = "London"
     }
 }
