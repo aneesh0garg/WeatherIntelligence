@@ -36,7 +36,7 @@ class WeatherAlertNotifier @Inject constructor(
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.mipmap.weather_launcher)
             .setContentTitle("${alert.event} in ${alert.city}")
             .setContentText(alert.headline)
             .setStyle(NotificationCompat.BigTextStyle().bigText(alert.description.ifBlank { alert.headline }))

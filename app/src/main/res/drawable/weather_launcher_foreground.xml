@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Weather radar arcs -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M58,18C82,18 99,37 99,61"
+        android:strokeColor="#44BDF7"
+        android:strokeLineCap="round"
+        android:strokeWidth="4" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M60,29C78,29 90,43 90,61"
+        android:strokeColor="#258EE7"
+        android:strokeLineCap="round"
+        android:strokeWidth="3" />
+    <path
+        android:fillColor="#55C8FA"
+        android:pathData="M95,57a4,4 0,1 0,0.01 0" />
+
+    <!-- Sun and rays -->
+    <path
+        android:fillColor="#FFC928"
+        android:pathData="M48,20a18,18 0,1 0,0.01 0" />
+    <path
+        android:fillColor="#FFDC3D"
+        android:pathData="M48,8l4,8h-8zM28,16l7,5l-5,5zM18,35l8,2l-2,7zM67,16l-2,10l-6,-5zM76,35l-8,2l2,7z" />
+
+    <!-- Cloud -->
+    <path
+        android:fillColor="#F4F8FF"
+        android:pathData="M21,72c0,-9 7,-16 16,-16c3,0 6,1 8,3c3,-8 10,-13 19,-13c11,0 20,9 20,20h1c7,0 13,6 13,13c0,7 -6,13 -13,13L37,92c-9,0 -16,-7 -16,-16c0,-1 0,-3 0,-4z" />
+    <path
+        android:fillColor="#DDEBFA"
+        android:pathData="M27,82c3,6 9,10 16,10h42c7,0 13,-6 13,-13c0,-2 0,-3 -1,-5c-2,6 -7,10 -14,10L42,84c-6,0 -11,-2 -15,-5z" />
+
+    <!-- Raindrop -->
+    <path
+        android:fillColor="#18B8F2"
+        android:pathData="M56,83c0,0 -9,10 -9,15c0,5 4,9 9,9c5,0 9,-4 9,-9c0,-5 -9,-15 -9,-15z" />
+</vector>
