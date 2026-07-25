@@ -8,5 +8,7 @@ data class HourlyWeather(
 
     val condition: String,
 
-    val icon: String
+    val icon: String,
+
+    val chanceOfRain: Int = 0
 )

@@ -1,27 +1,30 @@
 package com.aneesh.weather.core.util
 
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
-private val inputFormatter =
-    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+fun String.toDisplayTime(): String = try {
+    val input = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+    val output = SimpleDateFormat("h a", Locale.getDefault())
+    input.parse(this)?.let(output::format) ?: this
+} catch (e: Exception) {
+    this
+}
 
-private val outputFormatter =
-    DateTimeFormatter.ofPattern("h:mm a", Locale.getDefault())
-
-fun String.toDisplayTime(): String {
-
-    return try {
-
-        LocalDateTime
-            .parse(this, inputFormatter)
-            .format(outputFormatter)
-
-    } catch (e: Exception) {
-
-        this
-
+fun String.toForecastDayLabel(): String = try {
+    val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(this)
+        ?: throw IllegalArgumentException("Invalid forecast date")
+    val today = Calendar.getInstance()
+    val forecastDay = Calendar.getInstance().apply { time = date }
+    if (
+        today.get(Calendar.YEAR) == forecastDay.get(Calendar.YEAR) &&
+        today.get(Calendar.DAY_OF_YEAR) == forecastDay.get(Calendar.DAY_OF_YEAR)
+    ) {
+        "Today"
+    } else {
+        SimpleDateFormat("EEEE", Locale.getDefault()).format(date)
     }
-
+} catch (e: Exception) {
+    this
 }

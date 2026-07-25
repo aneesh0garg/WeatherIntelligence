@@ -26,7 +26,8 @@ fun WeatherResponse.toEntity(): WeatherEntity {
                         time = it.time,
                         temperature = it.temperature,
                         condition = it.condition.text,
-                        icon = it.condition.icon
+                        icon = it.condition.icon,
+                        chanceOfRain = it.chanceOfRain
                     )
                 },
         dailyForecast =
@@ -37,7 +38,8 @@ fun WeatherResponse.toEntity(): WeatherEntity {
                         minTemp = it.day.minTemp,
                         maxTemp = it.day.maxTemp,
                         condition = it.day.condition.text,
-                        icon = it.day.condition.icon
+                        icon = it.day.condition.icon,
+                        chanceOfRain = it.day.chanceOfRain
                     )
 
                 },

@@ -12,5 +12,8 @@ data class HourDto(
     val temperature: Double,
 
     @SerializedName("condition")
-    val condition: ConditionDto
+    val condition: ConditionDto,
+
+    @SerializedName("chance_of_rain")
+    val chanceOfRain: Int = 0
 )

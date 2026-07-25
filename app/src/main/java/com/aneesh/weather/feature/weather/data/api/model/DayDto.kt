@@ -14,5 +14,8 @@ data class DayDto(
     val avgTemp: Double,
 
     @SerializedName("condition")
-    val condition: ConditionDto
+    val condition: ConditionDto,
+
+    @SerializedName("daily_chance_of_rain")
+    val chanceOfRain: Int = 0
 )
