@@ -24,6 +24,10 @@ fun WeatherOutlineButton(
         modifier = modifier,
         border = BorderStroke(1.5.dp, palette.content),
         interactionSource = pressFeedback.interactionSource,
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = 2.dp,
+            pressedElevation = 6.dp
+        ),
         colors = ButtonDefaults.outlinedButtonColors(
             containerColor = pressFeedback.containerColor,
             contentColor = palette.content
