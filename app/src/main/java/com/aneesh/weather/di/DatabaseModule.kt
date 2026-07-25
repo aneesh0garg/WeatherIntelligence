@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.aneesh.weather.feature.weather.data.db.WeatherDao
 import com.aneesh.weather.feature.weather.data.db.WeatherDatabase
+import com.aneesh.weather.feature.weather.data.db.FavoriteCityDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,7 +27,7 @@ object DatabaseModule {
             WeatherDatabase::class.java,
             "weather.db"
         )
-            .fallbackToDestructiveMigration()
+            .addMigrations(WeatherDatabase.MIGRATION_1_2)
             .build()
     }
 
@@ -39,5 +40,10 @@ object DatabaseModule {
         return database.weatherDao()
 
     }
+
+    @Provides
+    @Singleton
+    fun provideFavoriteCityDao(database: WeatherDatabase): FavoriteCityDao =
+        database.favoriteCityDao()
 
 }

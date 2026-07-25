@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.aneesh.weather.feature.weather.domain.model.Resource
 import com.aneesh.weather.feature.weather.domain.model.Weather
 import com.aneesh.weather.feature.weather.domain.usecase.GetWeatherUseCase
+import com.aneesh.weather.feature.weather.domain.usecase.ManageFavoritesUseCase
 import com.aneesh.weather.feature.weather.domain.model.SevereWeatherAlert
 import com.aneesh.weather.feature.weather.worker.WeatherAlertNotifier
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,14 +18,20 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getWeatherUseCase: GetWeatherUseCase,
+    private val manageFavoritesUseCase: ManageFavoritesUseCase,
     private val weatherAlertNotifier: WeatherAlertNotifier
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
     val uiState = _uiState.asStateFlow()
+    private val _favoriteCities = MutableStateFlow<List<String>>(emptyList())
+    val favoriteCities = _favoriteCities.asStateFlow()
     private var weatherJob: Job? = null
 
     init {
+        viewModelScope.launch {
+            manageFavoritesUseCase.observe().collect { _favoriteCities.value = it }
+        }
         onEvent(HomeEvent.SearchCity("London"))
     }
 
@@ -79,6 +86,18 @@ class HomeViewModel @Inject constructor(
                         description = "If you can read this, severe-weather notifications are enabled."
                     )
                 )
+            }
+
+            HomeEvent.ToggleFavorite -> {
+                val state = _uiState.value as? HomeUiState.Success ?: return
+                viewModelScope.launch {
+                    val city = state.weather.city
+                    if (_favoriteCities.value.any { it.equals(city, ignoreCase = true) }) {
+                        manageFavoritesUseCase.remove(city)
+                    } else {
+                        manageFavoritesUseCase.add(city)
+                    }
+                }
             }
         }
     }

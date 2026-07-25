@@ -4,6 +4,8 @@ import android.util.Log
 import com.aneesh.weather.BuildConfig
 import com.aneesh.weather.feature.weather.data.api.WeatherApi
 import com.aneesh.weather.feature.weather.data.db.WeatherDao
+import com.aneesh.weather.feature.weather.data.db.FavoriteCityDao
+import com.aneesh.weather.feature.weather.data.db.FavoriteCityEntity
 import com.aneesh.weather.feature.weather.data.mapper.toDomain
 import com.aneesh.weather.feature.weather.data.mapper.toEntity
 import com.aneesh.weather.feature.weather.domain.model.Resource
@@ -23,11 +25,23 @@ import javax.inject.Singleton
 @Singleton
 class WeatherRepositoryImpl @Inject constructor(
     private val api: WeatherApi,
-    private val dao: WeatherDao
+    private val dao: WeatherDao,
+    private val favoriteCityDao: FavoriteCityDao
 ) : WeatherRepository {
 
-    override suspend fun syncCachedCities(): WeatherSyncResult {
-        val cities = dao.getCachedCities()
+    override fun observeFavoriteCities(): Flow<List<String>> =
+        favoriteCityDao.observeAll().map { favorites -> favorites.map { it.city } }
+
+    override suspend fun addFavorite(city: String) {
+        favoriteCityDao.insert(FavoriteCityEntity(city = city.trim()))
+    }
+
+    override suspend fun removeFavorite(city: String) {
+        favoriteCityDao.delete(FavoriteCityEntity(city = city))
+    }
+
+    override suspend fun syncFavoriteCities(): WeatherSyncResult {
+        val cities = favoriteCityDao.getCities()
         if (cities.isEmpty()) return WeatherSyncResult(completed = true, severeAlerts = emptyList())
 
         var completed = true

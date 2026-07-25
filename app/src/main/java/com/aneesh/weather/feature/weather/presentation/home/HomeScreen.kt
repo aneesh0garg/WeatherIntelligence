@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Button
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -30,6 +33,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val favoriteCities by viewModel.favoriteCities.collectAsStateWithLifecycle()
 
     Column(modifier = Modifier.fillMaxSize()) {
 
@@ -53,7 +57,10 @@ fun HomeScreen(
                         weather = state.weather,
                         isOffline = state.isOffline,
                         onSearch = { viewModel.onEvent(HomeEvent.SearchCity(it)) },
-                        onTestAlert = { viewModel.onEvent(HomeEvent.SendTestAlert) }
+                        onTestAlert = { viewModel.onEvent(HomeEvent.SendTestAlert) },
+                        favoriteCities = favoriteCities,
+                        onFavoriteSelected = { viewModel.onEvent(HomeEvent.SearchCity(it)) },
+                        onToggleFavorite = { viewModel.onEvent(HomeEvent.ToggleFavorite) }
                     )
                 }
             }
@@ -80,11 +87,19 @@ private fun WeatherContent(
     weather: Weather,
     isOffline: Boolean,
     onSearch: (String) -> Unit,
-    onTestAlert: () -> Unit
+    onTestAlert: () -> Unit,
+    favoriteCities: List<String>,
+    onFavoriteSelected: (String) -> Unit,
+    onToggleFavorite: () -> Unit
 ) {
     LazyColumn {
         item {
             WeatherSearchBar(initialValue = weather.city, onSearch = onSearch)
+        }
+        if (favoriteCities.isNotEmpty()) {
+            item {
+                FavoriteCitiesSection(favoriteCities, onFavoriteSelected)
+            }
         }
         if (isOffline) {
             item {
@@ -98,7 +113,11 @@ private fun WeatherContent(
             }
         }
         item {
-            CurrentWeatherCard(weather = weather)
+            CurrentWeatherCard(
+                weather = weather,
+                isFavorite = favoriteCities.any { it.equals(weather.city, ignoreCase = true) },
+                onToggleFavorite = onToggleFavorite
+            )
         }
         item {
             WeatherDetailsCard(weather)
@@ -120,4 +139,23 @@ private fun WeatherContent(
     }
 }
 
+@Composable
+private fun FavoriteCitiesSection(cities: List<String>, onCitySelected: (String) -> Unit) {
+    Column(modifier = Modifier.padding(top = 16.dp)) {
+        Text(
+            text = "Favorites",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+        LazyRow(modifier = Modifier.padding(top = 8.dp)) {
+            items(cities, key = { it }) { city ->
+                AssistChip(
+                    onClick = { onCitySelected(city) },
+                    label = { Text(city) },
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
+        }
+    }
+}
 

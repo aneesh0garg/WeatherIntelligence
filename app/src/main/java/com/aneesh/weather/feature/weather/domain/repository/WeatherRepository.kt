@@ -9,7 +9,13 @@ interface WeatherRepository {
 
     fun getWeather(city: String, forceRefresh: Boolean = false): Flow<Resource<Weather>>
 
-    /** Refreshes every city the user has already viewed and cached locally. */
-    suspend fun syncCachedCities(): WeatherSyncResult
+    fun observeFavoriteCities(): Flow<List<String>>
+
+    suspend fun addFavorite(city: String)
+
+    suspend fun removeFavorite(city: String)
+
+    /** Refreshes only cities the user chose to keep as favorites. */
+    suspend fun syncFavoriteCities(): WeatherSyncResult
 
 }

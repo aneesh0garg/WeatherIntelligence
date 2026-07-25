@@ -21,7 +21,11 @@ Compose UI → HomeViewModel → GetWeatherUseCase → WeatherRepository
 
 Room is the app's source of truth. A city forecast is cached with an `updatedAt` timestamp. On a request, the repository refreshes only when the 30-minute TTL has expired (or the user pulls to refresh). If a refresh fails and a cached response exists, the cached forecast is displayed with an offline banner. A first-load network failure is shown as an error state.
 
-`WeatherSyncWorker` schedules a unique six-hour WorkManager job with a network constraint. It refreshes every city already stored in Room, so background work neither needs a hard-coded city nor fetches data when the app has no saved weather data yet. WeatherAPI alerts marked **Severe** or **Extreme** are posted as high-priority notifications. Android 13+ requests notification permission when the app first opens.
+`WeatherSyncWorker` schedules a unique six-hour WorkManager job with a network constraint. It refreshes only the cities saved as favorites, avoiding unnecessary API calls for transient searches. WeatherAPI alerts marked **Severe** or **Extreme** are posted as high-priority notifications. Android 13+ requests notification permission when the app first opens.
+
+## Favorites
+
+Use **Save to favorites** on the current-weather card to persist a city. Saved cities appear as quick-selection chips at the top of the home screen and are the only cities refreshed by background work. Favorites are stored in Room and therefore remain available after an app restart or while offline.
 
 ## Testing notifications
 

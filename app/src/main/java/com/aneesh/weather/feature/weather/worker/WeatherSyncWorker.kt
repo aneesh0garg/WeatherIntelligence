@@ -17,7 +17,7 @@ class WeatherSyncWorker @AssistedInject constructor(
 ) : CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result {
-        val result = repository.syncCachedCities()
+        val result = repository.syncFavoriteCities()
         result.severeAlerts.forEach(notifier::notify)
         return if (result.completed) Result.success() else Result.retry()
     }

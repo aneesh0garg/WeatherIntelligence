@@ -9,4 +9,6 @@ sealed interface HomeEvent {
     data object Refresh : HomeEvent
 
     data object SendTestAlert : HomeEvent
+
+    data object ToggleFavorite : HomeEvent
 }

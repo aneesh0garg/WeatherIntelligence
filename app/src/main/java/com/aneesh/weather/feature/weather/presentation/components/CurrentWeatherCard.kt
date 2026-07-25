@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +20,9 @@ import com.aneesh.weather.feature.weather.domain.model.Weather
 
 @Composable
 fun CurrentWeatherCard(
-    weather: Weather
+    weather: Weather,
+    isFavorite: Boolean,
+    onToggleFavorite: () -> Unit
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -64,6 +67,10 @@ fun CurrentWeatherCard(
             Text(
                 "Feels like ${weather.feelsLike.toInt()}°"
             )
+
+            OutlinedButton(onClick = onToggleFavorite, modifier = Modifier.padding(top = 12.dp)) {
+                Text(if (isFavorite) "Remove from favorites" else "Save to favorites")
+            }
         }
     }
 }
