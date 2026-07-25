@@ -6,8 +6,10 @@ import com.aneesh.weather.domain.StartupCityResolver
 import com.aneesh.weather.domain.model.Resource
 import com.aneesh.weather.domain.model.SevereWeatherAlert
 import com.aneesh.weather.domain.model.Weather
+import com.aneesh.weather.domain.model.CitySuggestion
 import com.aneesh.weather.domain.usecase.GetWeatherUseCase
 import com.aneesh.weather.domain.usecase.ManageFavoritesUseCase
+import com.aneesh.weather.domain.usecase.SearchCitiesUseCase
 import com.aneesh.weather.data.location.CurrentCityProvider
 import com.aneesh.weather.worker.WeatherAlertNotifier
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,12 +19,19 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getWeatherUseCase: GetWeatherUseCase,
     private val manageFavoritesUseCase: ManageFavoritesUseCase,
+    private val searchCitiesUseCase: SearchCitiesUseCase,
     private val weatherAlertNotifier: WeatherAlertNotifier,
     private val currentCityProvider: CurrentCityProvider
 ) : ViewModel() {
@@ -31,6 +40,11 @@ class HomeViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
     private val _favoriteCities = MutableStateFlow<List<String>>(emptyList())
     val favoriteCities = _favoriteCities.asStateFlow()
+    private val searchQuery = MutableStateFlow("")
+    private val _citySuggestions = MutableStateFlow<List<CitySuggestion>>(emptyList())
+    val citySuggestions = _citySuggestions.asStateFlow()
+    private val _isSearchingCities = MutableStateFlow(false)
+    val isSearchingCities = _isSearchingCities.asStateFlow()
     private val _effects = MutableSharedFlow<HomeEffect>()
     val effects = _effects.asSharedFlow()
     private val _needsInitialLocation = MutableStateFlow(false)
@@ -40,6 +54,29 @@ class HomeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             manageFavoritesUseCase.observe().collect { _favoriteCities.value = it }
+        }
+        viewModelScope.launch {
+            searchQuery
+                .debounce(300)
+                .distinctUntilChanged()
+                .mapLatest { query ->
+                    val normalizedQuery = query.trim()
+                    val matchingFavorites = matchingFavorites(normalizedQuery)
+                    if (normalizedQuery.length < MINIMUM_SEARCH_LENGTH) {
+                        matchingFavorites
+                    } else {
+                        val remoteSuggestions = runCatching {
+                            searchCitiesUseCase(normalizedQuery)
+                        }.getOrDefault(emptyList())
+                        (remoteSuggestions + matchingFavorites.filter { favorite ->
+                            remoteSuggestions.none { it.city.equals(favorite.city, ignoreCase = true) }
+                        }).take(MAXIMUM_SUGGESTIONS)
+                    }
+                }
+                .collect { suggestions ->
+                    _citySuggestions.value = suggestions
+                    _isSearchingCities.value = false
+                }
         }
         _needsInitialLocation.value = true
     }
@@ -82,12 +119,19 @@ class HomeViewModel @Inject constructor(
     fun onEvent(event: HomeEvent) {
         when (event) {
             is HomeEvent.SearchCity -> {
-                viewModelScope.launch {
-                    if (_favoriteCities.value.any { it.equals(event.city, ignoreCase = true) }) {
-                        manageFavoritesUseCase.markSelected(event.city)
-                    }
-                }
-                loadWeather(event.city)
+                selectCity(city = event.city)
+            }
+
+            is HomeEvent.SearchQueryChanged -> {
+                _isSearchingCities.value = event.query.trim().length >= MINIMUM_SEARCH_LENGTH
+                _citySuggestions.value = matchingFavorites(event.query.trim())
+                searchQuery.value = event.query
+            }
+
+            is HomeEvent.SelectCitySuggestion -> {
+                selectCity(
+                    city = event.suggestion.city,
+                )
             }
 
             HomeEvent.Refresh -> {
@@ -152,7 +196,28 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private fun selectCity(city: String) {
+        searchQuery.value = ""
+        _citySuggestions.value = emptyList()
+        _isSearchingCities.value = false
+        viewModelScope.launch {
+            if (_favoriteCities.value.any { it.equals(city, ignoreCase = true) }) {
+                manageFavoritesUseCase.markSelected(city)
+            }
+        }
+        loadWeather(city)
+    }
+
+    private fun matchingFavorites(query: String): List<CitySuggestion> =
+        if (query.isBlank()) emptyList()
+        else _favoriteCities.value
+            .filter { it.contains(query, ignoreCase = true) }
+            .map(::CitySuggestion)
+            .take(MAXIMUM_SUGGESTIONS)
+
     private companion object {
         const val DEFAULT_CITY = "London"
+        const val MINIMUM_SEARCH_LENGTH = 2
+        const val MAXIMUM_SUGGESTIONS = 5
     }
 }

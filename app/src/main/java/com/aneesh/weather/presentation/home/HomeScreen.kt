@@ -45,6 +45,7 @@ import com.aneesh.weather.presentation.components.WeatherDetailsCard
 import com.aneesh.weather.presentation.components.WeatherHero
 import com.aneesh.weather.presentation.components.WeatherSearchBar
 import com.aneesh.weather.presentation.theme.LocalWeatherPalette
+import com.aneesh.weather.presentation.theme.SetStatusBarColor
 import com.aneesh.weather.presentation.theme.toWeatherPalette
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,6 +55,8 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val favoriteCities by viewModel.favoriteCities.collectAsStateWithLifecycle()
+    val citySuggestions by viewModel.citySuggestions.collectAsStateWithLifecycle()
+    val isSearchingCities by viewModel.isSearchingCities.collectAsStateWithLifecycle()
     val needsInitialLocation by viewModel.needsInitialLocation.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val locationPermissionLauncher = rememberLauncherForActivityResult(
@@ -94,6 +97,7 @@ fun HomeScreen(
             is HomeUiState.Success -> {
                 val palette = state.weather.condition.toWeatherPalette()
                 CompositionLocalProvider(LocalWeatherPalette provides palette) {
+                    SetStatusBarColor(palette.background.first())
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
@@ -109,6 +113,14 @@ fun HomeScreen(
                                 weather = state.weather,
                                 isOffline = state.isOffline,
                                 onSearch = { viewModel.onEvent(HomeEvent.SearchCity(it)) },
+                                citySuggestions = citySuggestions,
+                                isSearchingCities = isSearchingCities,
+                                onSearchQueryChanged = {
+                                    viewModel.onEvent(HomeEvent.SearchQueryChanged(it))
+                                },
+                                onSuggestionSelected = {
+                                    viewModel.onEvent(HomeEvent.SelectCitySuggestion(it))
+                                },
                                 onTestAlert = { viewModel.onEvent(HomeEvent.SendTestAlert) },
                                 favoriteCities = favoriteCities,
                                 onFavoriteSelected = { viewModel.onEvent(HomeEvent.SearchCity(it)) },
@@ -141,6 +153,10 @@ private fun WeatherContent(
     weather: Weather,
     isOffline: Boolean,
     onSearch: (String) -> Unit,
+    citySuggestions: List<com.aneesh.weather.domain.model.CitySuggestion>,
+    isSearchingCities: Boolean,
+    onSearchQueryChanged: (String) -> Unit,
+    onSuggestionSelected: (com.aneesh.weather.domain.model.CitySuggestion) -> Unit,
     onTestAlert: () -> Unit,
     favoriteCities: List<String>,
     onFavoriteSelected: (String) -> Unit,
@@ -149,7 +165,14 @@ private fun WeatherContent(
     val palette = LocalWeatherPalette.current
     LazyColumn {
         item {
-            WeatherSearchBar(initialValue = weather.city, onSearch = onSearch)
+            WeatherSearchBar(
+                initialValue = weather.city,
+                suggestions = citySuggestions,
+                isSearching = isSearchingCities,
+                onQueryChanged = onSearchQueryChanged,
+                onSuggestionSelected = onSuggestionSelected,
+                onSearch = onSearch
+            )
         }
         if (favoriteCities.isNotEmpty()) {
             item {

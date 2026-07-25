@@ -32,6 +32,11 @@ class WeatherRepositoryImpl @Inject constructor(
     private val favoriteCityDao: FavoriteCityDao
 ) : WeatherRepository {
 
+    override suspend fun searchCities(query: String) = api.searchCities(
+        apiKey = BuildConfig.WEATHER_API_KEY,
+        query = query.trim()
+    ).map { it.toDomain() }
+
     override fun observeFavoriteCities(): Flow<List<String>> =
         favoriteCityDao.observeAll().map { favorites -> favorites.map { it.city } }
 

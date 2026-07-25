@@ -1,11 +1,14 @@
 package com.aneesh.weather.domain.repository
 
 import com.aneesh.weather.domain.model.Resource
+import com.aneesh.weather.domain.model.CitySuggestion
 import com.aneesh.weather.domain.model.Weather
 import com.aneesh.weather.domain.model.WeatherSyncResult
 import kotlinx.coroutines.flow.Flow
 
 interface WeatherRepository {
+
+    suspend fun searchCities(query: String): List<CitySuggestion>
 
     fun getWeather(city: String, forceRefresh: Boolean = false): Flow<Resource<Weather>>
 

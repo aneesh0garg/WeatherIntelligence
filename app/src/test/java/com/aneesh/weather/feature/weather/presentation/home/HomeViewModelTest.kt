@@ -6,6 +6,7 @@ import com.aneesh.weather.domain.model.WeatherSyncResult
 import com.aneesh.weather.domain.repository.WeatherRepository
 import com.aneesh.weather.domain.usecase.GetWeatherUseCase
 import com.aneesh.weather.domain.usecase.ManageFavoritesUseCase
+import com.aneesh.weather.domain.usecase.SearchCitiesUseCase
 import com.aneesh.weather.data.location.CurrentCityProvider
 import com.aneesh.weather.worker.WeatherAlertNotifier
 import io.mockk.mockk
@@ -37,6 +38,7 @@ class HomeViewModelTest {
         val viewModel = HomeViewModel(
             GetWeatherUseCase(repository),
             ManageFavoritesUseCase(repository),
+            SearchCitiesUseCase(repository),
             mockk<WeatherAlertNotifier>(relaxed = true),
             mockk<CurrentCityProvider>(relaxed = true)
         )
@@ -54,6 +56,7 @@ class HomeViewModelTest {
     ) : WeatherRepository {
         private val favorites = MutableStateFlow(emptyList<String>())
 
+        override suspend fun searchCities(query: String) = emptyList<com.aneesh.weather.domain.model.CitySuggestion>()
         override fun getWeather(city: String, forceRefresh: Boolean): Flow<Resource<Weather>> =
             flowOf(Resource.Success(weather(city)))
         override fun observeFavoriteCities(): Flow<List<String>> = favorites

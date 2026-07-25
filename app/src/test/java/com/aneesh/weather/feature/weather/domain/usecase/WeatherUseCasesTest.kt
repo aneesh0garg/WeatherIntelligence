@@ -1,6 +1,7 @@
 package com.aneesh.weather.domain.usecase
 
 import com.aneesh.weather.domain.model.Resource
+import com.aneesh.weather.domain.model.CitySuggestion
 import com.aneesh.weather.domain.model.Weather
 import com.aneesh.weather.domain.model.WeatherSyncResult
 import com.aneesh.weather.domain.repository.WeatherRepository
@@ -35,11 +36,26 @@ class WeatherUseCasesTest {
         assertEquals(listOf("add:Mumbai", "selected:Mumbai", "remove:Mumbai"), repository.actions)
     }
 
+    @Test
+    fun `search cities use case delegates query`() = runTest {
+        val repository = RecordingRepository()
+
+        SearchCitiesUseCase(repository)("Pune")
+
+        assertEquals("Pune", repository.requestedSearchQuery)
+    }
+
     private class RecordingRepository : WeatherRepository {
         var requestedCity: String? = null
         var requestedForceRefresh: Boolean? = null
+        var requestedSearchQuery: String? = null
         val actions = mutableListOf<String>()
         private val favorites = MutableStateFlow(emptyList<String>())
+
+        override suspend fun searchCities(query: String): List<CitySuggestion> {
+            requestedSearchQuery = query
+            return emptyList()
+        }
 
         override fun getWeather(city: String, forceRefresh: Boolean): Flow<Resource<Weather>> {
             requestedCity = city
