@@ -4,9 +4,9 @@ An offline-first Android weather forecast app built for the Standard Chartered a
 
 ## Screenshots
 
-| Sunny · London | Rain · Pune | Overcast · Singapore |
+| City search suggestions | Current weather · Pune | Hourly and 7-day forecast |
 | --- | --- | --- |
-| <img src="docs/screenshots/london-sunny.png" alt="Sunny weather in London" width="220" /> | <img src="docs/screenshots/pune-rain.png" alt="Rainy weather in Pune" width="220" /> | <img src="docs/screenshots/singapore-overcast.png" alt="Overcast weather in Singapore" width="220" /> |
+| <img src="docs/screenshots/city-search-suggestions.png" alt="City search suggestions for Bangalore" width="220" /> | <img src="docs/screenshots/current-weather-pune.png" alt="Current rainy weather in Pune" width="220" /> | <img src="docs/screenshots/hourly-and-daily-forecast.png" alt="Hourly chart and seven-day forecast" width="220" /> |
 
 ## Architecture
 
