@@ -1,5 +1,5 @@
 kotlin version: 2.0.21
-error message: java.nio.file.NoSuchFileException: /Users/aneesh/AndroidStudioProjects/WeatherIntelligence/app/src/main/java/com/example/weather/presentation/theme/color.kt
+error message: java.nio.file.NoSuchFileException: /Users/aneesh/AndroidStudioProjects/WeatherIntelligence/app/src/main/java/com/aneesh/weather/presentation/theme/color.kt
 	at java.base/sun.nio.fs.UnixException.translateToIOException(Unknown Source)
 	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(Unknown Source)
 	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(Unknown Source)

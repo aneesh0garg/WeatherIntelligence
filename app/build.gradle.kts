@@ -17,7 +17,7 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.weather"
+    namespace = "com.aneesh.weather"
     compileSdk = 35
 
     buildFeatures {
@@ -26,7 +26,7 @@ android {
     }
     
     defaultConfig {
-        applicationId = "com.example.weather"
+        applicationId = "com.aneesh.weather"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
