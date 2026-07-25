@@ -1,6 +1,6 @@
 package com.example.weather.util
 
-import com.example.weather.data.db.WeatherEntity
+import com.example.weather.feature.weather.data.db.WeatherEntity
 
 fun WeatherEntity?.needsRefresh(): Boolean {
 

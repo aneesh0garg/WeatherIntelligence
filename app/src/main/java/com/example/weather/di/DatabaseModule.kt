@@ -2,8 +2,8 @@ package com.example.weather.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.weather.data.db.WeatherDao
-import com.example.weather.data.db.WeatherDatabase
+import com.example.weather.feature.weather.data.db.WeatherDao
+import com.example.weather.feature.weather.data.db.WeatherDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

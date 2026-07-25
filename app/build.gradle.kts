@@ -77,6 +77,9 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     debugImplementation(libs.compose.tooling)
 
+    // Coil
+    implementation(libs.coil.compose)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

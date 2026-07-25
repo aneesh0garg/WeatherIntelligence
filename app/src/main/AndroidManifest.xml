@@ -14,7 +14,7 @@
         android:theme="@style/Theme.WeatherIntelligence">
 
         <activity
-            android:name="com.example.weather.presentation.home.MainActivity"
+            android:name="com.example.weather.feature.weather.presentation.home.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
