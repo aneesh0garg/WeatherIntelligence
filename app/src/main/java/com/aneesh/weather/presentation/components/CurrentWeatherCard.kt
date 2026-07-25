@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.aneesh.weather.core.util.formatTemperature
+import com.aneesh.weather.util.formatTemperature
 import com.aneesh.weather.feature.weather.domain.model.Weather
 import com.aneesh.weather.feature.weather.presentation.theme.LocalWeatherPalette
 

@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.painterResource
 import com.aneesh.weather.R
-import com.aneesh.weather.core.util.formatTemperature
-import com.aneesh.weather.core.util.toForecastDayLabel
+import com.aneesh.weather.util.formatTemperature
+import com.aneesh.weather.util.toForecastDayLabel
 import com.aneesh.weather.feature.weather.domain.model.DailyWeather
 import com.aneesh.weather.feature.weather.presentation.theme.LocalWeatherPalette
 import coil.compose.AsyncImage
@@ -53,7 +53,7 @@ private fun DailyItem(day: DailyWeather) {
                     contentDescription = day.condition,
                     modifier = Modifier.size(42.dp)
                 )
-                if (day.chanceOfRain > 0) {
+                if (shouldShowRainChance(day.chanceOfRain)) {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
                         Icon(
                             painter = painterResource(R.drawable.ic_rain_chance),

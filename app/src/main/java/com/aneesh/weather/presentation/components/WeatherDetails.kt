@@ -12,9 +12,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.aneesh.weather.core.util.formatPressure
-import com.aneesh.weather.core.util.formatWindSpeed
-import com.aneesh.weather.core.util.toDisplayTime
+import com.aneesh.weather.util.formatPressure
+import com.aneesh.weather.util.formatWindSpeed
+import com.aneesh.weather.util.toDisplayTime
 import com.aneesh.weather.feature.weather.domain.model.Weather
 import com.aneesh.weather.feature.weather.presentation.theme.LocalWeatherPalette
 

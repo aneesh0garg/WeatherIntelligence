@@ -9,6 +9,7 @@ import com.aneesh.weather.feature.weather.domain.usecase.ManageFavoritesUseCase
 import com.aneesh.weather.feature.weather.domain.model.SevereWeatherAlert
 import com.aneesh.weather.feature.weather.worker.WeatherAlertNotifier
 import com.aneesh.weather.feature.weather.location.CurrentCityProvider
+import com.aneesh.weather.feature.weather.domain.StartupCityResolver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -123,11 +124,14 @@ class HomeViewModel @Inject constructor(
                 _needsInitialLocation.value = false
                 viewModelScope.launch {
                     val city = currentCityProvider.getCity()
-                    if (city != null) {
-                        loadWeather(city)
-                    } else {
-                        loadRecentFavoriteOrDefault()
-                    }
+                    loadWeather(
+                        StartupCityResolver.resolve(
+                            currentCity = city,
+                            lastSelectedFavorite = manageFavoritesUseCase.lastSelected(),
+                            lastAddedFavorite = manageFavoritesUseCase.lastAdded(),
+                            defaultCity = DEFAULT_CITY
+                        )
+                    )
                 }
             }
 

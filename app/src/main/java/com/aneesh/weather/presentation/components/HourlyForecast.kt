@@ -26,8 +26,8 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.painterResource
 import com.aneesh.weather.R
-import com.aneesh.weather.core.util.formatTemperature
-import com.aneesh.weather.core.util.toDisplayTime
+import com.aneesh.weather.util.formatTemperature
+import com.aneesh.weather.util.toDisplayTime
 import com.aneesh.weather.feature.weather.domain.model.HourlyWeather
 import com.aneesh.weather.feature.weather.presentation.theme.LocalWeatherPalette
 import coil.compose.AsyncImage
@@ -105,7 +105,7 @@ private fun HourItem(hour: HourlyWeather) {
                 contentDescription = hour.condition,
                 modifier = Modifier.size(38.dp)
             )
-            if (hour.chanceOfRain > 0) {
+            if (shouldShowRainChance(hour.chanceOfRain)) {
                 RainChance(hour.chanceOfRain)
             }
             Text(hour.temperature.formatTemperature(), style = MaterialTheme.typography.titleMedium)
