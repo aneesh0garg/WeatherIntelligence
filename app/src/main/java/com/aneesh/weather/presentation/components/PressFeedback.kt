@@ -6,6 +6,8 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.aneesh.weather.R
 
 data class PressFeedback(
     val interactionSource: MutableInteractionSource,
@@ -21,7 +23,7 @@ fun rememberPressFeedback(
     val isPressed = interactionSource.collectIsPressedAsState().value
     val containerColor = animateColorAsState(
         targetValue = if (isPressed) pressedColor else defaultColor,
-        label = "pressFeedback"
+        label = stringResource(R.string.pressfeedback)
     ).value
     return PressFeedback(interactionSource, containerColor)
 }

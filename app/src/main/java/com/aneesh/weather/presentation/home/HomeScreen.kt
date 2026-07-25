@@ -45,6 +45,7 @@ import com.aneesh.weather.presentation.components.WeatherSearchBar
 import com.aneesh.weather.presentation.components.WeatherOutlineButton
 import com.aneesh.weather.presentation.components.rememberPressFeedback
 import com.aneesh.weather.presentation.theme.LocalWeatherPalette
+import com.aneesh.weather.presentation.theme.Dimens
 import com.aneesh.weather.presentation.theme.SetStatusBarColor
 import com.aneesh.weather.presentation.theme.toWeatherPalette
 
@@ -193,7 +194,7 @@ private fun WeatherContent(
                 Surface(color = MaterialTheme.colorScheme.tertiaryContainer) {
                     Text(
                         text = "Showing the last saved forecast. Connect to refresh.",
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(Dimens.Space16),
                         color = MaterialTheme.colorScheme.onTertiaryContainer
                     )
                 }
@@ -214,7 +215,7 @@ private fun WeatherContent(
                 WeatherOutlineButton(
                     onClick = onTestAlert,
                     modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                        .padding(horizontal = Dimens.Space16, vertical = Dimens.Space12),
                     text = stringResource(R.string.send_test_severe_weather_alert)
                 )
             }
@@ -231,14 +232,14 @@ private fun WeatherContent(
 @Composable
 private fun FavoriteCitiesSection(cities: List<String>, onCitySelected: (String) -> Unit) {
     val palette = LocalWeatherPalette.current
-    Column(modifier = Modifier.padding(top = 16.dp)) {
+    Column(modifier = Modifier.padding(top = Dimens.Space16)) {
         Text(
             text = stringResource(R.string.favorites),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier.padding(horizontal = Dimens.Space16),
             color = palette.content
         )
-        LazyRow(modifier = Modifier.padding(top = 8.dp)) {
+        LazyRow(modifier = Modifier.padding(top = Dimens.Space8)) {
             items(cities, key = { it }) { city ->
                 val favoritePressFeedback = rememberPressFeedback(
                     defaultColor = palette.cardContainer,
@@ -247,7 +248,7 @@ private fun FavoriteCitiesSection(cities: List<String>, onCitySelected: (String)
                 AssistChip(
                     onClick = { onCitySelected(city) },
                     label = { Text(city) },
-                    modifier = Modifier.padding(start = 16.dp),
+                    modifier = Modifier.padding(start = Dimens.Space16),
                     interactionSource = favoritePressFeedback.interactionSource,
                     colors = AssistChipDefaults.assistChipColors(
                         containerColor = favoritePressFeedback.containerColor,

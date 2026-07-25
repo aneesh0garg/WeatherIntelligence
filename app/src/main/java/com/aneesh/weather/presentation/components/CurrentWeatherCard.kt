@@ -13,9 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
+import com.aneesh.weather.R
 import com.aneesh.weather.domain.model.Weather
+import com.aneesh.weather.presentation.theme.Dimens
 import com.aneesh.weather.presentation.theme.LocalWeatherPalette
 import com.aneesh.weather.util.formatTemperature
 
@@ -29,7 +31,7 @@ fun CurrentWeatherCard(
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(Dimens.Space16),
         colors = CardDefaults.elevatedCardColors(
             containerColor = palette.cardContainer,
             contentColor = palette.content
@@ -38,7 +40,7 @@ fun CurrentWeatherCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp),
+                .padding(Dimens.Space24),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -47,13 +49,13 @@ fun CurrentWeatherCard(
             )
 
             Spacer(
-                Modifier.height(16.dp)
+                Modifier.height(Dimens.Space16)
             )
 
             AsyncImage(
                 model = "https:${weather.icon}",
                 contentDescription = null,
-                modifier = Modifier.size(96.dp)
+                modifier = Modifier.size(Dimens.WeatherIcon)
 
             )
 
@@ -68,7 +70,7 @@ fun CurrentWeatherCard(
             )
 
             Spacer(
-                Modifier.height(12.dp)
+                Modifier.height(Dimens.Space12)
             )
 
             Text(
@@ -77,8 +79,8 @@ fun CurrentWeatherCard(
 
             WeatherOutlineButton(
                 onClick = onToggleFavorite,
-                modifier = Modifier.padding(top = 12.dp),
-                text = if (isFavorite) "Remove from favorites" else "Save to favorites"
+                modifier = Modifier.padding(top = Dimens.Space12),
+                text = if (isFavorite) stringResource(R.string.remove_from_favorites) else stringResource(R.string.save_to_favorites)
             )
         }
     }

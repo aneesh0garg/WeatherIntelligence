@@ -6,8 +6,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.aneesh.weather.presentation.theme.LocalWeatherPalette
+import com.aneesh.weather.presentation.theme.Dimens
 
 @Composable
 fun WeatherOutlineButton(
@@ -22,11 +22,11 @@ fun WeatherOutlineButton(
     OutlinedButton(
         onClick = onClick,
         modifier = modifier,
-        border = BorderStroke(1.5.dp, palette.content),
+        border = BorderStroke(Dimens.BorderWidth, palette.content),
         interactionSource = pressFeedback.interactionSource,
         elevation = ButtonDefaults.buttonElevation(
-            defaultElevation = 2.dp,
-            pressedElevation = 6.dp
+            defaultElevation = Dimens.ButtonElevation,
+            pressedElevation = Dimens.PressedButtonElevation
         ),
         colors = ButtonDefaults.outlinedButtonColors(
             containerColor = pressFeedback.containerColor,

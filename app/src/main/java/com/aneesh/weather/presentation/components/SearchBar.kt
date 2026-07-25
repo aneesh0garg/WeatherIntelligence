@@ -26,11 +26,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.aneesh.weather.R
 import com.aneesh.weather.domain.model.CitySuggestion
 import com.aneesh.weather.presentation.theme.LocalWeatherPalette
+import com.aneesh.weather.presentation.theme.Dimens
 
 @Composable
 fun WeatherSearchBar(
@@ -54,16 +57,16 @@ fun WeatherSearchBar(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = Dimens.Space16),
             value = city,
             onValueChange = {
                 city = it
                 onQueryChanged(it)
             },
             singleLine = true,
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(Dimens.Radius16),
             label = {
-                Text("Search city")
+                Text(stringResource(R.string.search_city))
             },
             leadingIcon = {
                 Icon(
@@ -120,7 +123,7 @@ fun WeatherSearchBar(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                    .padding(horizontal = Dimens.Space16, vertical = Dimens.Space4),
                 colors = CardDefaults.cardColors(containerColor = palette.cardContainer)
             ) {
 
@@ -143,7 +146,7 @@ fun WeatherSearchBar(
                         IconButton(onClick = onSuggestionsDismissed) {
                             Icon(
                                 imageVector = Icons.Default.Close,
-                                contentDescription = "Close suggestions",
+                                contentDescription = stringResource(R.string.close_suggestions),
                                 tint = palette.content
                             )
                         }
@@ -156,7 +159,7 @@ fun WeatherSearchBar(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(12.dp))
+                            .clip(RoundedCornerShape(Dimens.Radius12))
                             .background(pressFeedback.containerColor)
                             .clickable(
                                 interactionSource = pressFeedback.interactionSource,
@@ -165,7 +168,11 @@ fun WeatherSearchBar(
                                 city = suggestion.city
                                 onSuggestionSelected(suggestion)
                             }
-                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                            .padding(
+                                start = Dimens.Space16,
+                                end = Dimens.Space16,
+                                bottom = Dimens.Space16
+                            )
                     ) {
                         Text(text = suggestion.city, color = palette.content)
                         if (suggestion.subtitle.isNotBlank()) {

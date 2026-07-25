@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.aneesh.weather.domain.model.Weather
 import com.aneesh.weather.presentation.theme.LocalWeatherPalette
+import com.aneesh.weather.presentation.theme.Dimens
 import com.aneesh.weather.util.formatPressure
 import com.aneesh.weather.util.formatWindSpeed
 import com.aneesh.weather.util.toDisplayTime
@@ -22,10 +23,13 @@ import com.aneesh.weather.util.toDisplayTime
 fun WeatherDetailsCard(weather: Weather) {
     val palette = LocalWeatherPalette.current
     ElevatedCard(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = Dimens.Space16),
         colors = CardDefaults.elevatedCardColors(containerColor = palette.cardContainer, contentColor = palette.content)
     ) {
-        Column(modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Column(
+            modifier = Modifier.padding(Dimens.Space20),
+            verticalArrangement = Arrangement.spacedBy(Dimens.Space12)
+        ) {
             Text("Weather details", style = MaterialTheme.typography.titleLarge)
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Detail("Humidity", "${weather.humidity}%")

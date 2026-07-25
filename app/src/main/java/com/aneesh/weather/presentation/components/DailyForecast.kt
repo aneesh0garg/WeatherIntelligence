@@ -16,18 +16,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.aneesh.weather.R
 import com.aneesh.weather.util.formatTemperature
 import com.aneesh.weather.util.toForecastDayLabel
 import coil.compose.AsyncImage
 import com.aneesh.weather.domain.model.DailyWeather
 import com.aneesh.weather.presentation.theme.LocalWeatherPalette
+import com.aneesh.weather.presentation.theme.Dimens
+import com.aneesh.weather.util.shouldShowRainChance
 
 @Composable
 fun DailyForecastSection(weather: List<DailyWeather>) {
     val palette = LocalWeatherPalette.current
-    Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("7-day forecast", style = MaterialTheme.typography.titleLarge, color = palette.content)
+    Column(
+        modifier = Modifier.padding(Dimens.Space16),
+        verticalArrangement = Arrangement.spacedBy(Dimens.Space12)
+    ) {
+        Text(stringResource(R.string._7_day_forecast), style = MaterialTheme.typography.titleLarge, color = palette.content)
         weather.forEach { DailyItem(it) }
     }
 }
@@ -40,7 +46,7 @@ private fun DailyItem(day: DailyWeather) {
         colors = CardDefaults.elevatedCardColors(containerColor = palette.cardContainer, contentColor = palette.content)
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            modifier = Modifier.padding(horizontal = Dimens.Space16, vertical = Dimens.Space12),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -51,14 +57,17 @@ private fun DailyItem(day: DailyWeather) {
                 AsyncImage(
                     model = "https:${day.icon}",
                     contentDescription = day.condition,
-                    modifier = Modifier.size(42.dp)
+                    modifier = Modifier.size(Dimens.ForecastIcon)
                 )
                 if (shouldShowRainChance(day.chanceOfRain)) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(Dimens.Space2)
+                    ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_rain_chance),
-                            contentDescription = "Chance of rain",
-                            modifier = Modifier.size(14.dp),
+                            contentDescription = stringResource(R.string.chance_of_rain),
+                            modifier = Modifier.size(Dimens.RainIcon),
                             tint = palette.rain
                         )
                         Text("${day.chanceOfRain}%", style = MaterialTheme.typography.labelSmall)
@@ -66,7 +75,7 @@ private fun DailyItem(day: DailyWeather) {
                 }
             }
             Column(
-                modifier = Modifier.padding(start = 12.dp),
+                modifier = Modifier.padding(start = Dimens.Space12),
                 horizontalAlignment = Alignment.End
             ) {
                 Text(day.condition, style = MaterialTheme.typography.bodySmall, maxLines = 1)

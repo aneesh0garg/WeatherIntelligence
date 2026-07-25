@@ -31,20 +31,25 @@ import com.aneesh.weather.util.toDisplayTime
 import coil.compose.AsyncImage
 import com.aneesh.weather.domain.model.HourlyWeather
 import com.aneesh.weather.presentation.theme.LocalWeatherPalette
+import com.aneesh.weather.presentation.theme.Dimens
+import com.aneesh.weather.util.shouldShowRainChance
 import kotlin.collections.map
 
 @Composable
 fun HourlyForecastSection(weather: List<HourlyWeather>) {
     val palette = LocalWeatherPalette.current
-    Column(modifier = Modifier.padding(top = 24.dp)) {
+    Column(modifier = Modifier.padding(top = Dimens.Space24)) {
         Text(
             "Hourly forecast",
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier.padding(horizontal = Dimens.Space16),
             color = palette.content
         )
         TemperatureChart(weather, lineColor = palette.chartLine, gridColor = palette.chartGrid)
-        LazyRow(contentPadding = PaddingValues(16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        LazyRow(
+            contentPadding = PaddingValues(Dimens.Space16),
+            horizontalArrangement = Arrangement.spacedBy(Dimens.Space12)
+        ) {
             items(weather, key = { it.time }) { HourItem(it) }
         }
     }
@@ -56,21 +61,26 @@ private fun TemperatureChart(hours: List<HourlyWeather>, lineColor: Color, gridC
     Canvas(
         modifier = Modifier
             .fillMaxWidth()
-            .height(152.dp)
-            .padding(horizontal = 24.dp, vertical = 16.dp)
+            .height(Dimens.ChartHeight)
+            .padding(horizontal = Dimens.Space24, vertical = Dimens.Space16)
     ) {
         val temperatures = hours.map { it.temperature.toFloat() }
         val min = temperatures.min()
         val max = temperatures.max()
         val range = (max - min).takeIf { it > 0f } ?: 1f
-        val left = 8.dp.toPx()
-        val right = size.width - 8.dp.toPx()
-        val top = 8.dp.toPx()
-        val bottom = size.height - 8.dp.toPx()
+        val left = Dimens.Space8.toPx()
+        val right = size.width - Dimens.Space8.toPx()
+        val top = Dimens.Space8.toPx()
+        val bottom = size.height - Dimens.Space8.toPx()
 
         repeat(3) { index ->
             val y = top + (bottom - top) * index / 2f
-            drawLine(gridColor, start = Offset(left, y), end = Offset(right, y), strokeWidth = 1.dp.toPx())
+            drawLine(
+                gridColor,
+                start = Offset(left, y),
+                end = Offset(right, y),
+                strokeWidth = Dimens.ChartGridStroke.toPx()
+            )
         }
 
         val points = temperatures.mapIndexed { index, temperature ->
@@ -79,11 +89,17 @@ private fun TemperatureChart(hours: List<HourlyWeather>, lineColor: Color, gridC
             Offset(x, y)
         }
         points.zipWithNext().forEach { (start, end) ->
-            drawLine(lineColor, start, end, strokeWidth = 3.dp.toPx(), cap = StrokeCap.Round)
+            drawLine(
+                lineColor,
+                start,
+                end,
+                strokeWidth = Dimens.ChartLineStroke.toPx(),
+                cap = StrokeCap.Round
+            )
         }
         points.forEach { point ->
-            drawCircle(Color.White, radius = 5.dp.toPx(), center = point)
-            drawCircle(lineColor, radius = 3.dp.toPx(), center = point)
+            drawCircle(Color.White, radius = Dimens.ChartPointRadius.toPx(), center = point)
+            drawCircle(lineColor, radius = Dimens.ChartPointInnerRadius.toPx(), center = point)
         }
     }
 }
@@ -92,19 +108,21 @@ private fun TemperatureChart(hours: List<HourlyWeather>, lineColor: Color, gridC
 private fun HourItem(hour: HourlyWeather) {
     val palette = LocalWeatherPalette.current
     ElevatedCard(
-        modifier = Modifier.width(100.dp),
+        modifier = Modifier.width(Dimens.HourlyCardWidth),
         colors = CardDefaults.elevatedCardColors(containerColor = palette.cardContainer, contentColor = palette.content)
     ) {
         Column(
-            modifier = Modifier.padding(vertical = 16.dp, horizontal = 12.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(vertical = Dimens.Space16, horizontal = Dimens.Space12)
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(6.dp)
+            verticalArrangement = Arrangement.spacedBy(Dimens.Space6)
         ) {
             Text(hour.time.toDisplayTime(), style = MaterialTheme.typography.labelLarge)
             AsyncImage(
                 model = "https:${hour.icon}",
                 contentDescription = hour.condition,
-                modifier = Modifier.size(38.dp)
+                modifier = Modifier.size(Dimens.HourlyIcon)
             )
             if (shouldShowRainChance(hour.chanceOfRain)) {
                 RainChance(hour.chanceOfRain)
@@ -118,11 +136,14 @@ private fun HourItem(hour: HourlyWeather) {
 @Composable
 private fun RainChance(chance: Int) {
     val palette = LocalWeatherPalette.current
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(Dimens.Space2)
+    ) {
         Icon(
             painter = painterResource(R.drawable.ic_rain_chance),
             contentDescription = "Chance of rain",
-            modifier = Modifier.size(14.dp),
+            modifier = Modifier.size(Dimens.RainIcon),
             tint = palette.rain
         )
         Text("$chance%", style = MaterialTheme.typography.labelSmall)

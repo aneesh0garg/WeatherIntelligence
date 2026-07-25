@@ -2,4 +2,11 @@
     <string name="app_name">Weather Intelligence</string>
     <string name="send_test_severe_weather_alert">Send test severe-weather alert</string>
     <string name="favorites">Favorites</string>
+    <string name="remove_from_favorites">Remove from favorites</string>
+    <string name="save_to_favorites">Save to favorites</string>
+    <string name="_7_day_forecast">7-day forecast</string>
+    <string name="chance_of_rain">Chance of rain</string>
+    <string name="pressfeedback">pressFeedback</string>
+    <string name="close_suggestions">Close suggestions</string>
+    <string name="search_city">Search city</string>
 </resources>
