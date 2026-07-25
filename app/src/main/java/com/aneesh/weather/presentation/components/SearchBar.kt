@@ -1,7 +1,10 @@
 package com.aneesh.weather.presentation.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -20,6 +24,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,8 +38,10 @@ fun WeatherSearchBar(
     initialValue: String,
     suggestions: List<CitySuggestion>,
     isSearching: Boolean,
+    areSuggestionsVisible: Boolean,
     onQueryChanged: (String) -> Unit,
     onSuggestionSelected: (CitySuggestion) -> Unit,
+    onSuggestionsDismissed: () -> Unit,
     onSearch: (String) -> Unit
 ) {
     val palette = LocalWeatherPalette.current
@@ -108,13 +116,14 @@ fun WeatherSearchBar(
             )
         )
 
-        if (isSearching || suggestions.isNotEmpty()) {
+        if (areSuggestionsVisible && (isSearching || suggestions.isNotEmpty())) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 4.dp),
                 colors = CardDefaults.cardColors(containerColor = palette.cardContainer)
             ) {
+
                 if (isSearching) {
                     LinearProgressIndicator(
                         modifier = Modifier.fillMaxWidth(),
@@ -122,15 +131,41 @@ fun WeatherSearchBar(
                         trackColor = palette.mutedContent
                     )
                 }
+
+                if (suggestions.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        IconButton(onClick = onSuggestionsDismissed) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close suggestions",
+                                tint = palette.content
+                            )
+                        }
+                    }
+                }
                 suggestions.forEach { suggestion ->
+                    val pressFeedback = rememberPressFeedback(
+                        pressedColor = palette.content.copy(alpha = 0.16f)
+                    )
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable {
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(pressFeedback.containerColor)
+                            .clickable(
+                                interactionSource = pressFeedback.interactionSource,
+                                indication = null
+                            ) {
                                 city = suggestion.city
                                 onSuggestionSelected(suggestion)
                             }
-                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                     ) {
                         Text(text = suggestion.city, color = palette.content)
                         if (suggestion.subtitle.isNotBlank()) {
@@ -155,8 +190,10 @@ private fun SearchBarPreview() {
             initialValue = "London",
             suggestions = emptyList(),
             isSearching = false,
+            areSuggestionsVisible = false,
             onQueryChanged = {},
             onSuggestionSelected = {},
+            onSuggestionsDismissed = {},
             onSearch = {}
         )
     }

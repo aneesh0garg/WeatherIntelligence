@@ -16,6 +16,8 @@ sealed interface HomeEvent {
         val suggestion: CitySuggestion
     ) : HomeEvent
 
+    data object DismissCitySuggestions : HomeEvent
+
     data object Refresh : HomeEvent
 
     data object SendTestAlert : HomeEvent

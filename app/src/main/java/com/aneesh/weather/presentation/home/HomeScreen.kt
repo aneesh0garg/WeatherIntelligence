@@ -15,10 +15,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Button
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -44,6 +42,8 @@ import com.aneesh.weather.presentation.components.HourlyForecastSection
 import com.aneesh.weather.presentation.components.WeatherDetailsCard
 import com.aneesh.weather.presentation.components.WeatherHero
 import com.aneesh.weather.presentation.components.WeatherSearchBar
+import com.aneesh.weather.presentation.components.WeatherOutlineButton
+import com.aneesh.weather.presentation.components.rememberPressFeedback
 import com.aneesh.weather.presentation.theme.LocalWeatherPalette
 import com.aneesh.weather.presentation.theme.SetStatusBarColor
 import com.aneesh.weather.presentation.theme.toWeatherPalette
@@ -57,6 +57,7 @@ fun HomeScreen(
     val favoriteCities by viewModel.favoriteCities.collectAsStateWithLifecycle()
     val citySuggestions by viewModel.citySuggestions.collectAsStateWithLifecycle()
     val isSearchingCities by viewModel.isSearchingCities.collectAsStateWithLifecycle()
+    val areCitySuggestionsVisible by viewModel.areCitySuggestionsVisible.collectAsStateWithLifecycle()
     val needsInitialLocation by viewModel.needsInitialLocation.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val locationPermissionLauncher = rememberLauncherForActivityResult(
@@ -115,11 +116,15 @@ fun HomeScreen(
                                 onSearch = { viewModel.onEvent(HomeEvent.SearchCity(it)) },
                                 citySuggestions = citySuggestions,
                                 isSearchingCities = isSearchingCities,
+                                areCitySuggestionsVisible = areCitySuggestionsVisible,
                                 onSearchQueryChanged = {
                                     viewModel.onEvent(HomeEvent.SearchQueryChanged(it))
                                 },
                                 onSuggestionSelected = {
                                     viewModel.onEvent(HomeEvent.SelectCitySuggestion(it))
+                                },
+                                onSuggestionsDismissed = {
+                                    viewModel.onEvent(HomeEvent.DismissCitySuggestions)
                                 },
                                 onTestAlert = { viewModel.onEvent(HomeEvent.SendTestAlert) },
                                 favoriteCities = favoriteCities,
@@ -155,8 +160,10 @@ private fun WeatherContent(
     onSearch: (String) -> Unit,
     citySuggestions: List<com.aneesh.weather.domain.model.CitySuggestion>,
     isSearchingCities: Boolean,
+    areCitySuggestionsVisible: Boolean,
     onSearchQueryChanged: (String) -> Unit,
     onSuggestionSelected: (com.aneesh.weather.domain.model.CitySuggestion) -> Unit,
+    onSuggestionsDismissed: () -> Unit,
     onTestAlert: () -> Unit,
     favoriteCities: List<String>,
     onFavoriteSelected: (String) -> Unit,
@@ -169,8 +176,10 @@ private fun WeatherContent(
                 initialValue = weather.city,
                 suggestions = citySuggestions,
                 isSearching = isSearchingCities,
+                areSuggestionsVisible = areCitySuggestionsVisible,
                 onQueryChanged = onSearchQueryChanged,
                 onSuggestionSelected = onSuggestionSelected,
+                onSuggestionsDismissed = onSuggestionsDismissed,
                 onSearch = onSearch
             )
         }
@@ -202,15 +211,12 @@ private fun WeatherContent(
         }
         if (BuildConfig.DEBUG) {
             item {
-                Button(
+                WeatherOutlineButton(
                     onClick = onTestAlert,
                     modifier = Modifier
                         .padding(horizontal = 16.dp, vertical = 12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = palette.cardContainer,
-                        contentColor = palette.content
-                    )
-                ) { Text(stringResource(R.string.send_test_severe_weather_alert)) }
+                    text = stringResource(R.string.send_test_severe_weather_alert)
+                )
             }
         }
         item {
@@ -234,12 +240,17 @@ private fun FavoriteCitiesSection(cities: List<String>, onCitySelected: (String)
         )
         LazyRow(modifier = Modifier.padding(top = 8.dp)) {
             items(cities, key = { it }) { city ->
+                val favoritePressFeedback = rememberPressFeedback(
+                    defaultColor = palette.cardContainer,
+                    pressedColor = palette.content.copy(alpha = 0.16f)
+                )
                 AssistChip(
                     onClick = { onCitySelected(city) },
                     label = { Text(city) },
                     modifier = Modifier.padding(start = 16.dp),
+                    interactionSource = favoritePressFeedback.interactionSource,
                     colors = AssistChipDefaults.assistChipColors(
-                        containerColor = palette.cardContainer,
+                        containerColor = favoritePressFeedback.containerColor,
                         labelColor = palette.content
                     ),
                     border = AssistChipDefaults.assistChipBorder(

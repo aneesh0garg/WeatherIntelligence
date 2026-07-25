@@ -45,6 +45,8 @@ class HomeViewModel @Inject constructor(
     val citySuggestions = _citySuggestions.asStateFlow()
     private val _isSearchingCities = MutableStateFlow(false)
     val isSearchingCities = _isSearchingCities.asStateFlow()
+    private val _areCitySuggestionsVisible = MutableStateFlow(false)
+    val areCitySuggestionsVisible = _areCitySuggestionsVisible.asStateFlow()
     private val _effects = MutableSharedFlow<HomeEffect>()
     val effects = _effects.asSharedFlow()
     private val _needsInitialLocation = MutableStateFlow(false)
@@ -125,6 +127,7 @@ class HomeViewModel @Inject constructor(
             is HomeEvent.SearchQueryChanged -> {
                 _isSearchingCities.value = event.query.trim().length >= MINIMUM_SEARCH_LENGTH
                 _citySuggestions.value = matchingFavorites(event.query.trim())
+                _areCitySuggestionsVisible.value = event.query.isNotBlank()
                 searchQuery.value = event.query
             }
 
@@ -132,6 +135,11 @@ class HomeViewModel @Inject constructor(
                 selectCity(
                     city = event.suggestion.city,
                 )
+            }
+
+            HomeEvent.DismissCitySuggestions -> {
+                _areCitySuggestionsVisible.value = false
+                _isSearchingCities.value = false
             }
 
             HomeEvent.Refresh -> {
@@ -200,6 +208,7 @@ class HomeViewModel @Inject constructor(
         searchQuery.value = ""
         _citySuggestions.value = emptyList()
         _isSearchingCities.value = false
+        _areCitySuggestionsVisible.value = false
         viewModelScope.launch {
             if (_favoriteCities.value.any { it.equals(city, ignoreCase = true) }) {
                 manageFavoritesUseCase.markSelected(city)

@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.CardDefaults
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -77,14 +75,11 @@ fun CurrentWeatherCard(
                 "Feels like ${weather.feelsLike.toInt()}°"
             )
 
-            OutlinedButton(
+            WeatherOutlineButton(
                 onClick = onToggleFavorite,
                 modifier = Modifier.padding(top = 12.dp),
-                border = BorderStroke(1.dp, palette.content),
-                colors = androidx.compose.material3.ButtonDefaults.outlinedButtonColors(contentColor = palette.content)
-            ) {
-                Text(if (isFavorite) "Remove from favorites" else "Save to favorites")
-            }
+                text = if (isFavorite) "Remove from favorites" else "Save to favorites"
+            )
         }
     }
 }
