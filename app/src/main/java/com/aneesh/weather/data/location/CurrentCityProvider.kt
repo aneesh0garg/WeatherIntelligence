@@ -1,4 +1,4 @@
-package com.aneesh.weather.location
+package com.aneesh.weather.data.location
 
 import android.Manifest
 import android.content.Context

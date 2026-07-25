@@ -8,7 +8,7 @@ import com.aneesh.weather.domain.model.SevereWeatherAlert
 import com.aneesh.weather.domain.model.Weather
 import com.aneesh.weather.domain.usecase.GetWeatherUseCase
 import com.aneesh.weather.domain.usecase.ManageFavoritesUseCase
-import com.aneesh.weather.location.CurrentCityProvider
+import com.aneesh.weather.data.location.CurrentCityProvider
 import com.aneesh.weather.worker.WeatherAlertNotifier
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

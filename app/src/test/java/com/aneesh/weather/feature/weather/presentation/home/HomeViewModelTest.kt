@@ -6,7 +6,7 @@ import com.aneesh.weather.domain.model.WeatherSyncResult
 import com.aneesh.weather.domain.repository.WeatherRepository
 import com.aneesh.weather.domain.usecase.GetWeatherUseCase
 import com.aneesh.weather.domain.usecase.ManageFavoritesUseCase
-import com.aneesh.weather.location.CurrentCityProvider
+import com.aneesh.weather.data.location.CurrentCityProvider
 import com.aneesh.weather.worker.WeatherAlertNotifier
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
