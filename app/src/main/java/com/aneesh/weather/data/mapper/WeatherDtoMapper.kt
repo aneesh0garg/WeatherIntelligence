@@ -1,9 +1,10 @@
-package com.aneesh.weather.feature.weather.data.mapper
+package com.aneesh.weather.data.mapper
 
-import com.aneesh.weather.feature.weather.data.api.model.WeatherResponse
-import com.aneesh.weather.feature.weather.data.db.WeatherEntity
-import com.aneesh.weather.feature.weather.domain.model.DailyWeather
-import com.aneesh.weather.feature.weather.domain.model.HourlyWeather
+import com.aneesh.weather.data.api.model.WeatherResponse
+import com.aneesh.weather.data.db.WeatherEntity
+import com.aneesh.weather.domain.model.DailyWeather
+import com.aneesh.weather.domain.model.HourlyWeather
+
 
 fun WeatherResponse.toEntity(): WeatherEntity {
 

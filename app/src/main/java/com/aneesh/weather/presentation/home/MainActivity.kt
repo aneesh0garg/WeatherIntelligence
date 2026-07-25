@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.presentation.home
+package com.aneesh.weather.presentation.home
 
 import android.Manifest
 import android.os.Bundle
@@ -7,8 +7,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import com.aneesh.weather.feature.weather.presentation.navigation.WeatherNavGraph
-import com.aneesh.weather.feature.weather.presentation.theme.WeatherTheme
+import com.aneesh.weather.presentation.navigation.WeatherNavGraph
+import com.aneesh.weather.presentation.theme.WeatherTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

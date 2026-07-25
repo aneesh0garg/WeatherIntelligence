@@ -1,13 +1,13 @@
-package com.aneesh.weather.feature.weather.presentation.home
+package com.aneesh.weather.presentation.home
 
-import com.aneesh.weather.feature.weather.domain.model.Resource
-import com.aneesh.weather.feature.weather.domain.model.Weather
-import com.aneesh.weather.feature.weather.domain.model.WeatherSyncResult
-import com.aneesh.weather.feature.weather.domain.repository.WeatherRepository
-import com.aneesh.weather.feature.weather.domain.usecase.GetWeatherUseCase
-import com.aneesh.weather.feature.weather.domain.usecase.ManageFavoritesUseCase
-import com.aneesh.weather.feature.weather.location.CurrentCityProvider
-import com.aneesh.weather.feature.weather.worker.WeatherAlertNotifier
+import com.aneesh.weather.domain.model.Resource
+import com.aneesh.weather.domain.model.Weather
+import com.aneesh.weather.domain.model.WeatherSyncResult
+import com.aneesh.weather.domain.repository.WeatherRepository
+import com.aneesh.weather.domain.usecase.GetWeatherUseCase
+import com.aneesh.weather.domain.usecase.ManageFavoritesUseCase
+import com.aneesh.weather.location.CurrentCityProvider
+import com.aneesh.weather.worker.WeatherAlertNotifier
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

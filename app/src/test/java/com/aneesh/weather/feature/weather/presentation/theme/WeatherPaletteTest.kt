@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.presentation.theme
+package com.aneesh.weather.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 import org.junit.Assert.assertEquals

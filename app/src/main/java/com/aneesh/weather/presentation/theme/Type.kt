@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.presentation.theme
+package com.aneesh.weather.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

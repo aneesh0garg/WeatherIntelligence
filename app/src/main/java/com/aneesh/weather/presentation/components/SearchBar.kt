@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.presentation.components
+package com.aneesh.weather.presentation.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aneesh.weather.feature.weather.presentation.theme.LocalWeatherPalette
+import com.aneesh.weather.presentation.theme.LocalWeatherPalette
 
 @Composable
 fun WeatherSearchBar(

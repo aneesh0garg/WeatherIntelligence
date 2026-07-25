@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.domain.model
+package com.aneesh.weather.domain.model
 
 data class SevereWeatherAlert(
     val city: String,

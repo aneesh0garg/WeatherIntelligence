@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.data.api.model
+package com.aneesh.weather.data.api.model
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.presentation.home
+package com.aneesh.weather.presentation.home
 
 import android.widget.Toast
 import android.Manifest
@@ -36,16 +36,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.aneesh.weather.feature.weather.domain.model.Weather
-import com.aneesh.weather.feature.weather.presentation.components.WeatherSearchBar
 import com.aneesh.weather.BuildConfig
 import com.aneesh.weather.R
-import com.aneesh.weather.feature.weather.presentation.components.DailyForecastSection
-import com.aneesh.weather.feature.weather.presentation.components.HourlyForecastSection
-import com.aneesh.weather.feature.weather.presentation.components.WeatherDetailsCard
-import com.aneesh.weather.feature.weather.presentation.components.WeatherHero
-import com.aneesh.weather.feature.weather.presentation.theme.LocalWeatherPalette
-import com.aneesh.weather.feature.weather.presentation.theme.toWeatherPalette
+import com.aneesh.weather.domain.model.Weather
+import com.aneesh.weather.presentation.components.DailyForecastSection
+import com.aneesh.weather.presentation.components.HourlyForecastSection
+import com.aneesh.weather.presentation.components.WeatherDetailsCard
+import com.aneesh.weather.presentation.components.WeatherHero
+import com.aneesh.weather.presentation.components.WeatherSearchBar
+import com.aneesh.weather.presentation.theme.LocalWeatherPalette
+import com.aneesh.weather.presentation.theme.toWeatherPalette
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

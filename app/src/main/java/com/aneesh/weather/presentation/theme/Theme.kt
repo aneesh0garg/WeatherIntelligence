@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.presentation.theme
+package com.aneesh.weather.presentation.theme
 
 import android.app.Activity
 import android.os.Build

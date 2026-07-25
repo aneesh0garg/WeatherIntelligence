@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.presentation.navigation
+package com.aneesh.weather.presentation.navigation
 
 sealed class Routes(val route: String) {
 

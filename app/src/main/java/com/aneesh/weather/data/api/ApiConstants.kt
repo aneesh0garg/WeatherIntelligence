@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.data.api
+package com.aneesh.weather.data.api
 
 object ApiConstants {
 

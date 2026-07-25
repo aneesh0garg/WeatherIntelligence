@@ -1,19 +1,20 @@
-package com.aneesh.weather.feature.weather.data.repository
+package com.aneesh.weather.data.repository
 
 import android.util.Log
 import com.aneesh.weather.BuildConfig
-import com.aneesh.weather.feature.weather.data.api.WeatherApi
-import com.aneesh.weather.feature.weather.data.db.WeatherDao
-import com.aneesh.weather.feature.weather.data.db.FavoriteCityDao
-import com.aneesh.weather.feature.weather.data.db.FavoriteCityEntity
-import com.aneesh.weather.feature.weather.data.mapper.toDomain
-import com.aneesh.weather.feature.weather.data.mapper.toEntity
-import com.aneesh.weather.feature.weather.domain.model.Resource
-import com.aneesh.weather.feature.weather.domain.model.SevereWeatherAlert
-import com.aneesh.weather.feature.weather.domain.model.Weather
-import com.aneesh.weather.feature.weather.domain.model.WeatherSyncResult
-import com.aneesh.weather.feature.weather.domain.SevereAlertPolicy
-import com.aneesh.weather.feature.weather.domain.repository.WeatherRepository
+import com.aneesh.weather.data.api.WeatherApi
+import com.aneesh.weather.data.api.model.WeatherResponse
+import com.aneesh.weather.data.db.FavoriteCityDao
+import com.aneesh.weather.data.db.FavoriteCityEntity
+import com.aneesh.weather.data.db.WeatherDao
+import com.aneesh.weather.data.mapper.toDomain
+import com.aneesh.weather.data.mapper.toEntity
+import com.aneesh.weather.domain.SevereAlertPolicy
+import com.aneesh.weather.domain.model.Resource
+import com.aneesh.weather.domain.model.SevereWeatherAlert
+import com.aneesh.weather.domain.model.Weather
+import com.aneesh.weather.domain.model.WeatherSyncResult
+import com.aneesh.weather.domain.repository.WeatherRepository
 import com.aneesh.weather.util.needsRefresh
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -107,7 +108,7 @@ class WeatherRepositoryImpl @Inject constructor(
         emit(Resource.Error(e.message ?: "Unknown Error"))
     }
 
-    private suspend fun refresh(city: String): com.aneesh.weather.feature.weather.data.api.model.WeatherResponse {
+    private suspend fun refresh(city: String): WeatherResponse {
         val response = api.getForecast(
             apiKey = BuildConfig.WEATHER_API_KEY,
             city = city
@@ -116,7 +117,7 @@ class WeatherRepositoryImpl @Inject constructor(
         return response
     }
 
-    private fun com.aneesh.weather.feature.weather.data.api.model.WeatherResponse.toSevereAlerts(
+    private fun WeatherResponse.toSevereAlerts(
         city: String
     ): List<SevereWeatherAlert> = alerts?.alerts.orEmpty()
         .filter { SevereAlertPolicy.shouldNotify(it.severity) }

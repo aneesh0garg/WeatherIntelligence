@@ -1,10 +1,10 @@
-package com.aneesh.weather.feature.weather.worker
+package com.aneesh.weather.worker
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.aneesh.weather.feature.weather.domain.repository.WeatherRepository
+import com.aneesh.weather.domain.repository.WeatherRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 

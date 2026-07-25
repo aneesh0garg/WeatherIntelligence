@@ -1,6 +1,6 @@
-package com.aneesh.weather.feature.weather.domain.usecase
+package com.aneesh.weather.domain.usecase
 
-import com.aneesh.weather.feature.weather.domain.repository.WeatherRepository
+import com.aneesh.weather.domain.repository.WeatherRepository
 import javax.inject.Inject
 
 class GetWeatherUseCase @Inject constructor(

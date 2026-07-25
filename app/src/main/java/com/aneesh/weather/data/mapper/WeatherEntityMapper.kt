@@ -1,7 +1,7 @@
-package com.aneesh.weather.feature.weather.data.mapper
+package com.aneesh.weather.data.mapper
 
-import com.aneesh.weather.feature.weather.data.db.WeatherEntity
-import com.aneesh.weather.feature.weather.domain.model.Weather
+import com.aneesh.weather.data.db.WeatherEntity
+import com.aneesh.weather.domain.model.Weather
 
 fun WeatherEntity.toDomain() =
     Weather(

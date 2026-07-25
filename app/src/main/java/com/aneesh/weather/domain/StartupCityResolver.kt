@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.domain
+package com.aneesh.weather.domain
 
 object StartupCityResolver {
     fun resolve(

@@ -1,11 +1,11 @@
-package com.aneesh.weather.feature.weather.data.repository
+package com.aneesh.weather.data.repository
 
 import app.cash.turbine.test
-import com.aneesh.weather.feature.weather.data.api.WeatherApi
-import com.aneesh.weather.feature.weather.data.db.FavoriteCityDao
-import com.aneesh.weather.feature.weather.data.db.WeatherDao
-import com.aneesh.weather.feature.weather.data.db.WeatherEntity
-import com.aneesh.weather.feature.weather.domain.model.Resource
+import com.aneesh.weather.data.api.WeatherApi
+import com.aneesh.weather.data.db.FavoriteCityDao
+import com.aneesh.weather.data.db.WeatherDao
+import com.aneesh.weather.data.db.WeatherEntity
+import com.aneesh.weather.domain.model.Resource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

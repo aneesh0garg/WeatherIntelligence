@@ -1,6 +1,6 @@
-package com.aneesh.weather.feature.weather.presentation.home
+package com.aneesh.weather.presentation.home
 
-import com.aneesh.weather.feature.weather.domain.model.Weather
+import com.aneesh.weather.domain.model.Weather
 
 sealed interface HomeUiState {
     data object Loading : HomeUiState

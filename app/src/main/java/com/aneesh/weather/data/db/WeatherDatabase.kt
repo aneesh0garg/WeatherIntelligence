@@ -1,11 +1,12 @@
-package com.aneesh.weather.feature.weather.data.db
+package com.aneesh.weather.data.db
 
 import androidx.room.Database
 import androidx.room.migration.Migration
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.TypeConverters
-import com.aneesh.weather.feature.weather.data.db.converter.WeatherTypeConverters
+import com.aneesh.weather.data.db.converter.WeatherTypeConverters
+
 @Database(
     entities = [WeatherEntity::class, FavoriteCityEntity::class],
     version = 3,

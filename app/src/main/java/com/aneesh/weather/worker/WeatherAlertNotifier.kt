@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.worker
+package com.aneesh.weather.worker
 
 import android.Manifest
 import android.app.NotificationChannel
@@ -12,11 +12,12 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.aneesh.weather.R
-import com.aneesh.weather.feature.weather.domain.model.SevereWeatherAlert
-import com.aneesh.weather.feature.weather.presentation.home.MainActivity
+import com.aneesh.weather.domain.model.SevereWeatherAlert
+import com.aneesh.weather.presentation.home.MainActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.jvm.java
 
 @Singleton
 class WeatherAlertNotifier @Inject constructor(

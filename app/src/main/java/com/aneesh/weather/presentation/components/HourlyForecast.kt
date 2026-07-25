@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.presentation.components
+package com.aneesh.weather.presentation.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,9 +28,10 @@ import androidx.compose.ui.res.painterResource
 import com.aneesh.weather.R
 import com.aneesh.weather.util.formatTemperature
 import com.aneesh.weather.util.toDisplayTime
-import com.aneesh.weather.feature.weather.domain.model.HourlyWeather
-import com.aneesh.weather.feature.weather.presentation.theme.LocalWeatherPalette
 import coil.compose.AsyncImage
+import com.aneesh.weather.domain.model.HourlyWeather
+import com.aneesh.weather.presentation.theme.LocalWeatherPalette
+import kotlin.collections.map
 
 @Composable
 fun HourlyForecastSection(weather: List<HourlyWeather>) {

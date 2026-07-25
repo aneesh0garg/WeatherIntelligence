@@ -1,6 +1,6 @@
-package com.aneesh.weather.feature.weather.domain
+package com.aneesh.weather.domain
 
-import com.aneesh.weather.feature.weather.presentation.components.shouldShowRainChance
+import com.aneesh.weather.presentation.components.shouldShowRainChance
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

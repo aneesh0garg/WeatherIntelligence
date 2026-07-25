@@ -1,5 +1,7 @@
 package com.aneesh.weather.core.util
 
+import com.aneesh.weather.util.toDisplayTime
+import com.aneesh.weather.util.toForecastDayLabel
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before

@@ -1,10 +1,16 @@
 # Weather Intelligence
 
-An offline-first Android weather forecast app built for the Standard Chartered assessment. It shows current conditions, hourly weather, and a seven-day forecast using [WeatherAPI.com](https://www.weatherapi.com/docs/).
+An offline-first Android weather forecast app built for the Standard Chartered assessment. It shows current conditions, hourly weather, and a seven-day forecast using [WeatherAPI.com](https://www.weatherapi.com/docs/). The interface adapts its palette to the active weather condition.
+
+## Screenshots
+
+| Sunny · London | Rain · Pune | Overcast · Singapore |
+| --- | --- | --- |
+| <img src="docs/screenshots/london-sunny.png" alt="Sunny weather in London" width="220" /> | <img src="docs/screenshots/pune-rain.png" alt="Rainy weather in Pune" width="220" /> | <img src="docs/screenshots/singapore-overcast.png" alt="Overcast weather in Singapore" width="220" /> |
 
 ## Architecture
 
-The app follows a clean, feature-oriented MVVM structure:
+The app follows a clean MVVM structure:
 
 ```
 Compose UI → HomeViewModel → GetWeatherUseCase → WeatherRepository
@@ -12,7 +18,7 @@ Compose UI → HomeViewModel → GetWeatherUseCase → WeatherRepository
                                                    └─ Retrofit (WeatherAPI)
 ```
 
-- **Presentation:** Jetpack Compose, `StateFlow`, lifecycle-aware collection.
+- **Presentation:** Jetpack Compose, `StateFlow`, lifecycle-aware collection, and dynamic weather palettes.
 - **Domain:** `Weather` models, repository contract, and use case.
 - **Data:** Retrofit API client, Room entity/DAO, mapping layer, and repository implementation.
 - **Dependency injection:** Hilt.
@@ -23,9 +29,11 @@ Room is the app's source of truth. A city forecast is cached with an `updatedAt`
 
 `WeatherSyncWorker` schedules a unique six-hour WorkManager job with a network constraint. It refreshes only the cities saved as favorites, avoiding unnecessary API calls for transient searches. WeatherAPI alerts marked **Severe** or **Extreme** are posted as high-priority notifications. Android 13+ requests notification permission when the app first opens.
 
-## Favorites
+## Favorites and location fallback
 
 Use **Save to favorites** on the current-weather card to persist a city. Saved cities appear as quick-selection chips at the top of the home screen and are the only cities refreshed by background work. Favorites are stored in Room and therefore remain available after an app restart or while offline.
+
+On launch, the app prefers the current device location. If it is unavailable, it falls back to the last selected favorite, then the most recently added favorite, and finally London.
 
 ## Testing notifications
 
@@ -64,4 +72,4 @@ The generated APK is located at `app/build/outputs/apk/debug/app-debug.apk`.
 
 ## Tests
 
-`CachePolicyTest` covers the TTL boundary and expired-cache behavior. The policy is a pure function to make it deterministic and easy to extend with repository and ViewModel tests.
+The unit-test suite covers cache TTL behavior, formatting and display policies, weather palettes, repository caching, use-case delegation, and ViewModel startup fallback behavior.

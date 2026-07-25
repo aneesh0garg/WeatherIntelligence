@@ -1,4 +1,4 @@
-package com.aneesh.weather.core.util
+package com.aneesh.weather.util
 
 import kotlin.math.roundToInt
 

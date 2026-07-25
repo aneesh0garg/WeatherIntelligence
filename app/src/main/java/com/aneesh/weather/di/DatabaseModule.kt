@@ -2,9 +2,9 @@ package com.aneesh.weather.di
 
 import android.content.Context
 import androidx.room.Room
-import com.aneesh.weather.feature.weather.data.db.WeatherDao
-import com.aneesh.weather.feature.weather.data.db.WeatherDatabase
-import com.aneesh.weather.feature.weather.data.db.FavoriteCityDao
+import com.aneesh.weather.data.db.FavoriteCityDao
+import com.aneesh.weather.data.db.WeatherDao
+import com.aneesh.weather.data.db.WeatherDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

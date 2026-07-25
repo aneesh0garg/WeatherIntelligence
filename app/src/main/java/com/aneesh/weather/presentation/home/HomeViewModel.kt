@@ -1,15 +1,15 @@
-package com.aneesh.weather.feature.weather.presentation.home
+package com.aneesh.weather.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aneesh.weather.feature.weather.domain.model.Resource
-import com.aneesh.weather.feature.weather.domain.model.Weather
-import com.aneesh.weather.feature.weather.domain.usecase.GetWeatherUseCase
-import com.aneesh.weather.feature.weather.domain.usecase.ManageFavoritesUseCase
-import com.aneesh.weather.feature.weather.domain.model.SevereWeatherAlert
-import com.aneesh.weather.feature.weather.worker.WeatherAlertNotifier
-import com.aneesh.weather.feature.weather.location.CurrentCityProvider
-import com.aneesh.weather.feature.weather.domain.StartupCityResolver
+import com.aneesh.weather.domain.StartupCityResolver
+import com.aneesh.weather.domain.model.Resource
+import com.aneesh.weather.domain.model.SevereWeatherAlert
+import com.aneesh.weather.domain.model.Weather
+import com.aneesh.weather.domain.usecase.GetWeatherUseCase
+import com.aneesh.weather.domain.usecase.ManageFavoritesUseCase
+import com.aneesh.weather.location.CurrentCityProvider
+import com.aneesh.weather.worker.WeatherAlertNotifier
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.MutableSharedFlow

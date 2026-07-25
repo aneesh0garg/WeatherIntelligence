@@ -1,7 +1,7 @@
 package com.aneesh.weather.di
 
-import com.aneesh.weather.feature.weather.data.repository.WeatherRepositoryImpl
-import com.aneesh.weather.feature.weather.domain.repository.WeatherRepository
+import com.aneesh.weather.data.repository.WeatherRepositoryImpl
+import com.aneesh.weather.domain.repository.WeatherRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

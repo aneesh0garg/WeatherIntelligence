@@ -1,9 +1,9 @@
-package com.aneesh.weather.feature.weather.data.db
+package com.aneesh.weather.data.db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.aneesh.weather.feature.weather.domain.model.DailyWeather
-import com.aneesh.weather.feature.weather.domain.model.HourlyWeather
+import com.aneesh.weather.domain.model.DailyWeather
+import com.aneesh.weather.domain.model.HourlyWeather
 
 @Entity(tableName = "weather")
 data class WeatherEntity(

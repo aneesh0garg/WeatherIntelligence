@@ -1,8 +1,8 @@
-package com.aneesh.weather.feature.weather.data.db.converter
+package com.aneesh.weather.data.db.converter
 
 import androidx.room.TypeConverter
-import com.aneesh.weather.feature.weather.domain.model.DailyWeather
-import com.aneesh.weather.feature.weather.domain.model.HourlyWeather
+import com.aneesh.weather.domain.model.DailyWeather
+import com.aneesh.weather.domain.model.HourlyWeather
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 

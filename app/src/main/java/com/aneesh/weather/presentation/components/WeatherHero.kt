@@ -1,10 +1,10 @@
-package com.aneesh.weather.feature.weather.presentation.components
+package com.aneesh.weather.presentation.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.aneesh.weather.feature.weather.domain.model.Weather
+import com.aneesh.weather.domain.model.Weather
 
 @Composable
 fun WeatherHero(

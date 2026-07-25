@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.data.db
+package com.aneesh.weather.data.db
 
 import androidx.room.Entity
 import androidx.room.ColumnInfo

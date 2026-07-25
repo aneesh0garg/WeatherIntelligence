@@ -1,6 +1,6 @@
-package com.aneesh.weather.feature.weather.data.api
+package com.aneesh.weather.data.api
 
-import com.aneesh.weather.feature.weather.data.api.model.WeatherResponse
+import com.aneesh.weather.data.api.model.WeatherResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

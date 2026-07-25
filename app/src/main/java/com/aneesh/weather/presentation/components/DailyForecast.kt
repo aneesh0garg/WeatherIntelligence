@@ -1,4 +1,4 @@
-package com.aneesh.weather.feature.weather.presentation.components
+package com.aneesh.weather.presentation.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,9 +19,9 @@ import androidx.compose.ui.res.painterResource
 import com.aneesh.weather.R
 import com.aneesh.weather.util.formatTemperature
 import com.aneesh.weather.util.toForecastDayLabel
-import com.aneesh.weather.feature.weather.domain.model.DailyWeather
-import com.aneesh.weather.feature.weather.presentation.theme.LocalWeatherPalette
 import coil.compose.AsyncImage
+import com.aneesh.weather.domain.model.DailyWeather
+import com.aneesh.weather.presentation.theme.LocalWeatherPalette
 
 @Composable
 fun DailyForecastSection(weather: List<DailyWeather>) {

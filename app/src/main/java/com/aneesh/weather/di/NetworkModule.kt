@@ -1,7 +1,7 @@
 package com.aneesh.weather.di
 
-import com.aneesh.weather.feature.weather.data.api.ApiConstants
-import com.aneesh.weather.feature.weather.data.api.WeatherApi
+import com.aneesh.weather.data.api.ApiConstants
+import com.aneesh.weather.data.api.WeatherApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

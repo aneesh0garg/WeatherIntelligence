@@ -1,9 +1,10 @@
-package com.aneesh.weather.feature.weather.domain.usecase
+package com.aneesh.weather.domain.usecase
 
-import com.aneesh.weather.feature.weather.domain.model.Resource
-import com.aneesh.weather.feature.weather.domain.model.Weather
-import com.aneesh.weather.feature.weather.domain.model.WeatherSyncResult
-import com.aneesh.weather.feature.weather.domain.repository.WeatherRepository
+import com.aneesh.weather.domain.model.Resource
+import com.aneesh.weather.domain.model.Weather
+import com.aneesh.weather.domain.model.WeatherSyncResult
+import com.aneesh.weather.domain.repository.WeatherRepository
+
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
