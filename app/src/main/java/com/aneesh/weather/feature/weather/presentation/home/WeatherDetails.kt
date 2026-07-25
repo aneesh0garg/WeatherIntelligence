@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.aneesh.weather.core.util.formatPressure
 import com.aneesh.weather.core.util.formatWindSpeed
+import com.aneesh.weather.core.util.toDisplayTime
 import com.aneesh.weather.feature.weather.domain.model.Weather
 
 @Composable
@@ -34,7 +35,7 @@ fun WeatherDetailsCard(
                 Detail("Wind", weather.wind.formatWindSpeed())
                 Detail("Pressure", weather.pressure.formatPressure())
             }
-            Text("Local time: ${weather.localTime}", style = MaterialTheme.typography.bodyMedium)
+            Text("Local time: ${weather.localTime.toDisplayTime()}", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }

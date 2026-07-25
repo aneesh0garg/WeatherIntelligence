@@ -11,10 +11,13 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
+import com.aneesh.weather.R
 import com.aneesh.weather.core.util.formatTemperature
 import com.aneesh.weather.core.util.toForecastDayLabel
 import com.aneesh.weather.feature.weather.domain.model.DailyWeather
@@ -45,13 +48,25 @@ private fun DailyItem(day: DailyWeather, containerColor: Color, contentColor: Co
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(day.date.toForecastDayLabel(), style = MaterialTheme.typography.titleMedium)
-                Text("${day.chanceOfRain}% rain", style = MaterialTheme.typography.bodySmall)
             }
-            AsyncImage(
-                model = "https:${day.icon}",
-                contentDescription = day.condition,
-                modifier = Modifier.size(42.dp)
-            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                AsyncImage(
+                    model = "https:${day.icon}",
+                    contentDescription = day.condition,
+                    modifier = Modifier.size(42.dp)
+                )
+                if (day.chanceOfRain > 0) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_rain_chance),
+                            contentDescription = "Chance of rain",
+                            modifier = Modifier.size(14.dp),
+                            tint = Color(0xFF59C8FF)
+                        )
+                        Text("${day.chanceOfRain}%", style = MaterialTheme.typography.labelSmall)
+                    }
+                }
+            }
             Column(
                 modifier = Modifier.padding(start = 12.dp),
                 horizontalAlignment = Alignment.End

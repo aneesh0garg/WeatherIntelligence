@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -16,11 +17,14 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
+import com.aneesh.weather.R
 import com.aneesh.weather.core.util.formatTemperature
 import com.aneesh.weather.core.util.toDisplayTime
 import com.aneesh.weather.feature.weather.domain.model.HourlyWeather
@@ -101,9 +105,24 @@ private fun HourItem(hour: HourlyWeather, containerColor: Color, contentColor: C
                 contentDescription = hour.condition,
                 modifier = Modifier.size(38.dp)
             )
-            Text("${hour.chanceOfRain}% rain", style = MaterialTheme.typography.labelSmall)
+            if (hour.chanceOfRain > 0) {
+                RainChance(hour.chanceOfRain)
+            }
             Text(hour.temperature.formatTemperature(), style = MaterialTheme.typography.titleMedium)
             Text(hour.condition, style = MaterialTheme.typography.labelSmall, maxLines = 1)
         }
+    }
+}
+
+@Composable
+private fun RainChance(chance: Int) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+        Icon(
+            painter = painterResource(R.drawable.ic_rain_chance),
+            contentDescription = "Chance of rain",
+            modifier = Modifier.size(14.dp),
+            tint = Color(0xFF59C8FF)
+        )
+        Text("$chance%", style = MaterialTheme.typography.labelSmall)
     }
 }

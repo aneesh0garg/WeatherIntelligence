@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 import javax.inject.Singleton
+import retrofit2.HttpException
 
 @Singleton
 class WeatherRepositoryImpl @Inject constructor(
@@ -71,7 +72,7 @@ class WeatherRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 Log.e("Repository", "Refresh failed", e)
                 if (cached == null) {
-                    emit(Resource.Error(e.message ?: "Unknown Error"))
+                    emit(Resource.Error(e.toWeatherMessage(normalizedCity)))
                     return@flow
                 }
                 refreshFailed = true
@@ -116,4 +117,9 @@ class WeatherRepositoryImpl @Inject constructor(
                 description = it.description
             )
         }
+
+    private fun Throwable.toWeatherMessage(city: String): String = when {
+        this is HttpException && code() == 400 -> "We couldn't find \"$city\"."
+        else -> message ?: "Unable to load weather right now."
+    }
 }

@@ -9,6 +9,7 @@ fun String.toDisplayTime(): String = try {
     val output = SimpleDateFormat("h a", Locale.getDefault())
     input.parse(this)?.let(output::format) ?: this
 } catch (e: Exception) {
+    e.printStackTrace()
     this
 }
 
@@ -26,5 +27,6 @@ fun String.toForecastDayLabel(): String = try {
         SimpleDateFormat("EEEE", Locale.getDefault()).format(date)
     }
 } catch (e: Exception) {
+    e.printStackTrace()
     this
 }
