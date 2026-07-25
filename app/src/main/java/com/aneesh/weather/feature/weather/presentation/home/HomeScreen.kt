@@ -3,15 +3,19 @@ package com.aneesh.weather.feature.weather.presentation.home
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aneesh.weather.feature.weather.domain.model.Weather
@@ -43,7 +47,11 @@ fun HomeScreen(
                         viewModel.onEvent(HomeEvent.Refresh)
                     }
                 ) {
-                    WeatherContent(state.weather)
+                    WeatherContent(
+                        weather = state.weather,
+                        isOffline = state.isOffline,
+                        onSearch = { viewModel.onEvent(HomeEvent.SearchCity(it)) }
+                    )
                 }
             }
         }
@@ -65,18 +73,31 @@ private fun ErrorScreen(message: String) {
 }
 
 @Composable
-private fun WeatherContent(weather: Weather) {
+private fun WeatherContent(
+    weather: Weather,
+    isOffline: Boolean,
+    onSearch: (String) -> Unit
+) {
     LazyColumn {
         item {
-            WeatherSearchBar(initialValue = "London") {
-                //Implement search
+            WeatherSearchBar(initialValue = weather.city, onSearch = onSearch)
+        }
+        if (isOffline) {
+            item {
+                Surface(color = MaterialTheme.colorScheme.tertiaryContainer) {
+                    Text(
+                        text = "Showing the last saved forecast. Connect to refresh.",
+                        modifier = Modifier.padding(16.dp),
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
+                }
             }
         }
         item {
             CurrentWeatherCard(weather = weather)
         }
         item {
-            WeatherDetailsCard()
+            WeatherDetailsCard(weather)
         }
         item {
             HourlyForecastSection(weather = weather.hourly)
@@ -86,7 +107,6 @@ private fun WeatherContent(weather: Weather) {
         }
     }
 }
-
 
 
 

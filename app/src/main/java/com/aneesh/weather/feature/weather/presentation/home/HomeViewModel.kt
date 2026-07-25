@@ -8,6 +8,7 @@ import com.aneesh.weather.feature.weather.domain.usecase.GetWeatherUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,14 +19,16 @@ class HomeViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
     val uiState = _uiState.asStateFlow()
+    private var weatherJob: Job? = null
 
     init {
         onEvent(HomeEvent.SearchCity("London"))
     }
 
-    private fun loadWeather(city: String) {
-        viewModelScope.launch {
-            getWeatherUseCase(city).collect { resource ->
+    private fun loadWeather(city: String, forceRefresh: Boolean = false) {
+        weatherJob?.cancel()
+        weatherJob = viewModelScope.launch {
+            getWeatherUseCase(city, forceRefresh).collect { resource ->
                 when (resource) {
                     is Resource.Loading -> {
                         _uiState.value = HomeUiState.Loading
@@ -36,7 +39,7 @@ class HomeViewModel @Inject constructor(
                         if (weather != null) {
                             _uiState.value = HomeUiState.Success(
                                 weather = weather,
-                                isOffline = false // Assuming default for now
+                                isOffline = resource.isStale
                             )
                         } else {
                             _uiState.value = HomeUiState.Error("Invalid weather data")
@@ -60,7 +63,7 @@ class HomeViewModel @Inject constructor(
             HomeEvent.Refresh -> {
                 val currentState = _uiState.value
                 if (currentState is HomeUiState.Success) {
-                    loadWeather(currentState.weather.city)
+                    loadWeather(currentState.weather.city, forceRefresh = true)
                 }
             }
         }

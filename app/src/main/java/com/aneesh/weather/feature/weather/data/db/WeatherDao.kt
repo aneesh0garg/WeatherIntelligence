@@ -22,6 +22,9 @@ interface WeatherDao {
         city: String
     ): Flow<WeatherEntity?>
 
+    @Query("SELECT city FROM weather")
+    suspend fun getCachedCities(): List<String>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(
         weather: WeatherEntity

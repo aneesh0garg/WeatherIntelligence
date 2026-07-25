@@ -7,6 +7,6 @@ class GetWeatherUseCase @Inject constructor(
     private val repository: WeatherRepository
 ) {
 
-    operator fun invoke(city: String) =
-        repository.getWeather(city)
+    operator fun invoke(city: String, forceRefresh: Boolean = false) =
+        repository.getWeather(city, forceRefresh)
 }

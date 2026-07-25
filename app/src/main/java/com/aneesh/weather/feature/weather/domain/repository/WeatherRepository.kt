@@ -6,6 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface WeatherRepository {
 
-    fun getWeather(city: String): Flow<Resource<Weather>>
+    fun getWeather(city: String, forceRefresh: Boolean = false): Flow<Resource<Weather>>
+
+    /** Refreshes every city the user has already viewed and cached locally. */
+    suspend fun syncCachedCities(): Boolean
 
 }

@@ -24,29 +24,40 @@ class WeatherRepositoryImpl @Inject constructor(
     private val dao: WeatherDao
 ) : WeatherRepository {
 
-    override fun getWeather(city: String): Flow<Resource<Weather>> = flow {
-        val cached = dao.getWeather(city)
+    override suspend fun syncCachedCities(): Boolean {
+        val cities = dao.getCachedCities()
+        if (cities.isEmpty()) return true
 
-        if (cached == null || cached.needsRefresh()) {
+        return cities.all { city -> runCatching { refresh(city) }.isSuccess }
+    }
+
+    override fun getWeather(city: String, forceRefresh: Boolean): Flow<Resource<Weather>> = flow {
+        val normalizedCity = city.trim()
+        if (normalizedCity.isBlank()) {
+            emit(Resource.Error("Enter a city name"))
+            return@flow
+        }
+
+        val cached = dao.getWeather(normalizedCity)
+        var refreshFailed = false
+
+        if (forceRefresh || cached == null || cached.needsRefresh()) {
             try {
-                val response = api.getForecast(
-                    apiKey = BuildConfig.WEATHER_API_KEY,
-                    city = city
-                )
-                dao.insert(response.toEntity())
+                refresh(normalizedCity)
             } catch (e: Exception) {
                 Log.e("Repository", "Refresh failed", e)
                 if (cached == null) {
                     emit(Resource.Error(e.message ?: "Unknown Error"))
                     return@flow
                 }
+                refreshFailed = true
             }
         }
 
-        dao.observeWeather(city)
+        dao.observeWeather(normalizedCity)
             .map { entity ->
                 if (entity != null) {
-                    Resource.Success(entity.toDomain())
+                    Resource.Success(entity.toDomain(), isStale = refreshFailed)
                 } else {
                     Resource.Error("City not found")
                 }
@@ -58,5 +69,13 @@ class WeatherRepositoryImpl @Inject constructor(
         emit(Resource.Loading)
     }.catch { e ->
         emit(Resource.Error(e.message ?: "Unknown Error"))
+    }
+
+    private suspend fun refresh(city: String) {
+        val response = api.getForecast(
+            apiKey = BuildConfig.WEATHER_API_KEY,
+            city = city
+        )
+        dao.insert(response.toEntity())
     }
 }
