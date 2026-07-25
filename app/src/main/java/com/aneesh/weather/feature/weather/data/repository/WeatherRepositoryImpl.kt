@@ -7,7 +7,9 @@ import com.aneesh.weather.feature.weather.data.db.WeatherDao
 import com.aneesh.weather.feature.weather.data.mapper.toDomain
 import com.aneesh.weather.feature.weather.data.mapper.toEntity
 import com.aneesh.weather.feature.weather.domain.model.Resource
+import com.aneesh.weather.feature.weather.domain.model.SevereWeatherAlert
 import com.aneesh.weather.feature.weather.domain.model.Weather
+import com.aneesh.weather.feature.weather.domain.model.WeatherSyncResult
 import com.aneesh.weather.feature.weather.domain.repository.WeatherRepository
 import com.aneesh.weather.util.needsRefresh
 import kotlinx.coroutines.flow.Flow
@@ -24,11 +26,19 @@ class WeatherRepositoryImpl @Inject constructor(
     private val dao: WeatherDao
 ) : WeatherRepository {
 
-    override suspend fun syncCachedCities(): Boolean {
+    override suspend fun syncCachedCities(): WeatherSyncResult {
         val cities = dao.getCachedCities()
-        if (cities.isEmpty()) return true
+        if (cities.isEmpty()) return WeatherSyncResult(completed = true, severeAlerts = emptyList())
 
-        return cities.all { city -> runCatching { refresh(city) }.isSuccess }
+        var completed = true
+        val alerts = cities.flatMap { city ->
+            runCatching { refresh(city).toSevereAlerts(city) }
+                .getOrElse {
+                    completed = false
+                    emptyList()
+                }
+        }
+        return WeatherSyncResult(completed = completed, severeAlerts = alerts)
     }
 
     override fun getWeather(city: String, forceRefresh: Boolean): Flow<Resource<Weather>> = flow {
@@ -71,11 +81,25 @@ class WeatherRepositoryImpl @Inject constructor(
         emit(Resource.Error(e.message ?: "Unknown Error"))
     }
 
-    private suspend fun refresh(city: String) {
+    private suspend fun refresh(city: String): com.aneesh.weather.feature.weather.data.api.model.WeatherResponse {
         val response = api.getForecast(
             apiKey = BuildConfig.WEATHER_API_KEY,
             city = city
         )
         dao.insert(response.toEntity())
+        return response
     }
+
+    private fun com.aneesh.weather.feature.weather.data.api.model.WeatherResponse.toSevereAlerts(
+        city: String
+    ): List<SevereWeatherAlert> = alerts?.alerts.orEmpty()
+        .filter { it.severity.contains("severe", ignoreCase = true) || it.severity.contains("extreme", ignoreCase = true) }
+        .map {
+            SevereWeatherAlert(
+                city = city,
+                event = it.event,
+                headline = it.headline.ifBlank { it.event },
+                description = it.description
+            )
+        }
 }

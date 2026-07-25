@@ -3,6 +3,7 @@ package com.aneesh
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import androidx.work.WorkManager
 import com.aneesh.weather.feature.weather.worker.WeatherSyncScheduler
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -14,6 +15,7 @@ class WeatherApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        WorkManager.initialize(this, workManagerConfiguration)
         WeatherSyncScheduler.schedule(this)
     }
 

@@ -7,4 +7,6 @@ sealed interface HomeEvent {
     ) : HomeEvent
 
     data object Refresh : HomeEvent
+
+    data object SendTestAlert : HomeEvent
 }

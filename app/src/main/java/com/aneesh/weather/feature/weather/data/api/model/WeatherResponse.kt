@@ -11,5 +11,8 @@ data class WeatherResponse(
     val current: CurrentDto,
 
     @SerializedName("forecast")
-    val forecast: ForecastDto
+    val forecast: ForecastDto,
+
+    @SerializedName("alerts")
+    val alerts: AlertsDto? = null
 )

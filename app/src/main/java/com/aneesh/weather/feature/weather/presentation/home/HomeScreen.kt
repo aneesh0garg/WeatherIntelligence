@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -21,6 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aneesh.weather.feature.weather.domain.model.Weather
 import com.aneesh.weather.feature.weather.presentation.components.CurrentWeatherCard
 import com.aneesh.weather.feature.weather.presentation.components.WeatherSearchBar
+import com.aneesh.weather.BuildConfig
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,7 +52,8 @@ fun HomeScreen(
                     WeatherContent(
                         weather = state.weather,
                         isOffline = state.isOffline,
-                        onSearch = { viewModel.onEvent(HomeEvent.SearchCity(it)) }
+                        onSearch = { viewModel.onEvent(HomeEvent.SearchCity(it)) },
+                        onTestAlert = { viewModel.onEvent(HomeEvent.SendTestAlert) }
                     )
                 }
             }
@@ -76,7 +79,8 @@ private fun ErrorScreen(message: String) {
 private fun WeatherContent(
     weather: Weather,
     isOffline: Boolean,
-    onSearch: (String) -> Unit
+    onSearch: (String) -> Unit,
+    onTestAlert: () -> Unit
 ) {
     LazyColumn {
         item {
@@ -99,6 +103,14 @@ private fun WeatherContent(
         item {
             WeatherDetailsCard(weather)
         }
+        if (BuildConfig.DEBUG) {
+            item {
+                Button(
+                    onClick = onTestAlert,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+                ) { Text("Send test severe-weather alert") }
+            }
+        }
         item {
             HourlyForecastSection(weather = weather.hourly)
         }
@@ -107,6 +119,5 @@ private fun WeatherContent(
         }
     }
 }
-
 
 

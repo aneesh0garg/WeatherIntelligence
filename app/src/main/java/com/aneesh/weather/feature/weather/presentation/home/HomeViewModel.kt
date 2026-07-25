@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.aneesh.weather.feature.weather.domain.model.Resource
 import com.aneesh.weather.feature.weather.domain.model.Weather
 import com.aneesh.weather.feature.weather.domain.usecase.GetWeatherUseCase
+import com.aneesh.weather.feature.weather.domain.model.SevereWeatherAlert
+import com.aneesh.weather.feature.weather.worker.WeatherAlertNotifier
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getWeatherUseCase: GetWeatherUseCase
+    private val getWeatherUseCase: GetWeatherUseCase,
+    private val weatherAlertNotifier: WeatherAlertNotifier
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
@@ -65,6 +68,17 @@ class HomeViewModel @Inject constructor(
                 if (currentState is HomeUiState.Success) {
                     loadWeather(currentState.weather.city, forceRefresh = true)
                 }
+            }
+
+            HomeEvent.SendTestAlert -> {
+                weatherAlertNotifier.notify(
+                    SevereWeatherAlert(
+                        city = "Test City",
+                        event = "Severe storm warning",
+                        headline = "This is a test weather notification",
+                        description = "If you can read this, severe-weather notifications are enabled."
+                    )
+                )
             }
         }
     }

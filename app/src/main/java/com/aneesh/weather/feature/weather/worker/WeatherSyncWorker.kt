@@ -12,9 +12,13 @@ import dagger.assisted.AssistedInject
 class WeatherSyncWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted params: WorkerParameters,
-    private val repository: WeatherRepository
+    private val repository: WeatherRepository,
+    private val notifier: WeatherAlertNotifier
 ) : CoroutineWorker(appContext, params) {
 
-    override suspend fun doWork(): Result =
-        if (repository.syncCachedCities()) Result.success() else Result.retry()
+    override suspend fun doWork(): Result {
+        val result = repository.syncCachedCities()
+        result.severeAlerts.forEach(notifier::notify)
+        return if (result.completed) Result.success() else Result.retry()
+    }
 }
